@@ -1,0 +1,21 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="UFOPlayer.Views.StatusView"
+			 xmlns:progRing="clr-namespace:AvaloniaProgressRing;assembly=AvaloniaProgressRing">
+	<StackPanel>
+		<PathIcon x:Name="pathIcon" Data="{StaticResource cellular_data_2_regular}" Height="20" Width="20" ></PathIcon>
+	<progRing:ProgressRing x:Name="progress"
+		                   Width="20"
+                           Height="20"
+                           IsActive="True"
+						   IsVisible="False"
+                           HorizontalAlignment="Center"
+                           VerticalAlignment="Center"
+                           Foreground="White"
+                           Margin=""/>
+	</StackPanel>
+	
+</UserControl>

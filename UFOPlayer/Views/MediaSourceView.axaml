@@ -1,0 +1,23 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="UFOPlayer.Views.MediaSourceView"
+			 xmlns:vm="clr-namespace:UFOPlayer.ViewModels"
+			 x:DataType="vm:MediaSourceViewModel"
+			 xmlns:views="clr-namespace:UFOPlayer.Views">
+
+	<StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+		<!-- First Dropdown Box -->
+		<Label VerticalAlignment="Center" Content="Media Source:"/>
+		
+		<ComboBox x:Name="mediaOptions" Width="100" Margin="5" VerticalAlignment="Center" ItemsSource="{Binding PlaybackModes}">
+		</ComboBox>
+
+		<views:StatusView Margin="5" VerticalAlignment="Center" Width="20" Height="20"
+						  Disconnected="{StaticResource cellular_data_off_regular}" 
+						  Connected="{StaticResource cellular_data_2_regular}"
+						  Status="{Binding Status}"/>
+	</StackPanel>
+</UserControl>

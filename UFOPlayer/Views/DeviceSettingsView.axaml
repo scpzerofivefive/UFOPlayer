@@ -1,0 +1,16 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="200" d:DesignHeight="450"
+             x:Class="UFOPlayer.Views.DeviceSettingsView"
+			 xmlns:vm="clr-namespace:UFOPlayer.ViewModels"
+			 x:DataType="vm:DeviceSettingsViewModel">
+	<Grid ColumnDefinitions="Auto,Auto" RowDefinitions="Auto, Auto, Auto">
+		<Label VerticalAlignment="Center" Content="Right Side: " Grid.Row="0" Grid.Column="0"/>
+		<Button Command="{Binding TestCommand}" Content="Test" Grid.Row="0" Grid.Column="1"></Button>
+
+		<Label VerticalAlignment="Center" Content= "Flip: " Grid.Row="1" Grid.Column="0"/>
+		<ToggleSwitch IsChecked="{Binding IsFlipped}" Grid.Row="1" Grid.Column="1"></ToggleSwitch>
+	</Grid>
+</UserControl>
