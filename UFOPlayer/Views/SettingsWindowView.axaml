@@ -1,0 +1,55 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d" SizeToContent="WidthAndHeight"
+        x:Class="UFOPlayer.SettingsWindowView"
+        Title="SettingsWindowView"
+		xmlns:vm="clr-namespace:UFOPlayer.ViewModels"
+		x:DataType="vm:SettingsViewModel">
+	<StackPanel>
+		<TabControl TabStripPlacement="Left" MinWidth="500" MinHeight="500">
+			<!-- Tab Items go here -->
+			<TabItem Header="About">
+				<DockPanel>
+					<TextBlock Text=""/>
+					<TextBlock DockPanel.Dock="Bottom" VerticalAlignment="Bottom" Text="{Binding VERSION}"/>
+				</DockPanel>
+			</TabItem>
+			<TabItem Header="Media Sources">
+				<StackPanel>
+					<StackPanel>
+						<TextBlock Text="VLC" FontWeight="Bold"/>
+						<DockPanel Margin="5">
+							<Button DockPanel.Dock="Right" Content="Use Default" Click="BtnVlcDefault_Click" Margin="5" />
+							<TextBlock Text="IP : Port" VerticalAlignment="Center" Margin="5" Width="80"/>
+							<TextBox Text="{Binding VlcEndpoint}" VerticalAlignment="Center" Margin="5"/>
+						</DockPanel>
+						<DockPanel Margin="5">
+							<TextBlock Text="Password" VerticalAlignment="Center" Margin="5" Width="80"/>
+							<TextBox Text="{Binding VlcPassword}" VerticalAlignment="Center" Margin="5"/>
+						</DockPanel>
+					</StackPanel>
+					<StackPanel>
+						<TextBlock Text="DeoVR / HereSphereVR" FontWeight="Bold"/>
+						<DockPanel Margin="5">
+							<Button DockPanel.Dock="Right" Content="Use Default" Click="BtnDeoVRDefault_Click" Margin="5" />
+							<TextBlock Text="IP : Port" VerticalAlignment="Center" Margin="5" Width="80"/>
+							<TextBox Text="{Binding DeoVrEndpoint}" VerticalAlignment="Center" Margin="5"/>
+						</DockPanel>
+					</StackPanel>
+				</StackPanel>
+
+
+			</TabItem>
+			
+		</TabControl>
+		<DockPanel Grid.Column="1" Margin="5">
+			<Button DockPanel.Dock="Right" Content="Confirm" Click="Btn_Confirm" x:Name="ConfirmButton" Margin="5"/>
+			<Button DockPanel.Dock="Right" Content="Cancel" Click="Btn_Cancel" Margin="5"/>
+			<Button Content="Reset" Click="Btn_Reset" Margin="5"/>
+		</DockPanel>
+
+	</StackPanel>
+
+</Window>

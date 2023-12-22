@@ -1,0 +1,28 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="UFOPlayer.Views.DeviceView"
+			 xmlns:vm="clr-namespace:UFOPlayer.ViewModels"
+			 xmlns:views="clr-namespace:UFOPlayer.Views"
+			 x:DataType="vm:DeviceViewModel">
+
+	<StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+		<Button Content="UFO" HorizontalAlignment="Center" VerticalAlignment="Center" Background="Transparent">
+			<Button.Flyout>
+				<Flyout>
+					<views:DeviceSettingsView DataContext="{Binding DeviceSettings}"/>
+				</Flyout>
+			</Button.Flyout>
+		</Button>
+
+		<Button Content="{Binding ButtonTitle}" IsEnabled="{Binding Clickable}" Command="{Binding ConnectCommand}" 
+				Width="80" Margin="5" VerticalAlignment="Center"/>
+
+		<views:StatusView Margin="5" VerticalAlignment="Center"
+						  Status="{Binding Status}"
+						  Connected="{StaticResource bluetooth_regular}"
+						  Disconnected="{StaticResource bluetooth_disabled_regular}"/>
+	</StackPanel>
+</UserControl>

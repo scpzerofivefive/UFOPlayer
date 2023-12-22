@@ -1,0 +1,31 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="clr-namespace:UFOPlayer.ViewModels"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d" SizeToContent="WidthAndHeight"
+		xmlns:views="clr-namespace:UFOPlayer.Views"
+        x:Class="UFOPlayer.Views.MainWindow"
+		x:DataType="vm:MainWindowViewModel"
+        Icon="/Assets/avalonia-logo.ico"
+        Title="UFOPlayer"
+		CanResize="False">
+	<Design.DataContext>
+		<vm:MainWindowViewModel/>
+	</Design.DataContext>
+	<Grid
+		ColumnDefinitions="Auto,Auto,Auto"
+		RowDefinitions="Auto,Auto">
+		<views:DeviceView DataContext="{Binding Device}" Grid.Row="0" Grid.Column="0"/>
+		<views:MediaSourceView DataContext="{Binding Media}" Grid.Row="0" Grid.Column="1"/>
+		<Button VerticalAlignment="Center" Grid.Row="0" Grid.Column="2" Background="Transparent"
+				Click="OpenSettings">
+			<PathIcon Data="{StaticResource settings_regular}" />
+		</Button>
+		<views:ScriptView DataContext="{Binding Script}" 
+						  Grid.Row="1"
+						  Grid.Column="0"
+						  Grid.ColumnSpan="3"/>
+	</Grid>
+
+</Window>
