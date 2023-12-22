@@ -1,7 +1,7 @@
 
 # UFOPlayer
 
-<p align="center"><img src="Assets/preview.png" width="200"></p>
+<p align="center"><img src="UFOPlayer/Assets/preview.png"></p>
 UFOPlayer connects directly to your Vorze U.F.O TW via Bluetooth and synchronizes with media players. 
 
 
