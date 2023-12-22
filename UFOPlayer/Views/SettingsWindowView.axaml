@@ -10,7 +10,7 @@
 	<StackPanel>
 		<TabControl TabStripPlacement="Left" MinWidth="500" MinHeight="500">
 			<!-- Tab Items go here -->
-			<TabItem Header="About">
+			<TabItem Header="UFOPlayer">
 				<DockPanel>
 					<TextBlock Text=""/>
 					<TextBlock DockPanel.Dock="Bottom" VerticalAlignment="Bottom" Text="{Binding VERSION}"/>
