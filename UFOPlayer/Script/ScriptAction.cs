@@ -8,7 +8,7 @@ namespace UFOPlayer.Script
 {
     public class ScriptAction
     {
-        public int Timestamp { get; set; } //in milliseconds
+        public int Timestamp { get; set; }
         public sbyte Left { get; set; }
         public sbyte Right { get; set; }
 
