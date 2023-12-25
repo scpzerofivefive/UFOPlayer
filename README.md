@@ -20,3 +20,7 @@ UFOPlayer connects directly to your Vorze U.F.O TW via Bluetooth and synchronize
 
 * VLC
 * DeoVR
+
+## Requirements
+
+Windows 10 or Later
