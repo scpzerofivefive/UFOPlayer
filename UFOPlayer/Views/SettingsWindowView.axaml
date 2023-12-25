@@ -4,15 +4,21 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d" SizeToContent="WidthAndHeight"
         x:Class="UFOPlayer.SettingsWindowView"
-        Title="SettingsWindowView"
+		Icon="/Assets/ufoplayer.ico"
+        Title="Settings"
 		xmlns:vm="clr-namespace:UFOPlayer.ViewModels"
+		xmlns:md="https://github.com/whistyun/Markdown.Avalonia"
 		x:DataType="vm:SettingsViewModel">
 	<StackPanel>
 		<TabControl TabStripPlacement="Left" MinWidth="500" MinHeight="500">
 			<!-- Tab Items go here -->
 			<TabItem Header="UFOPlayer">
 				<DockPanel>
-					<TextBlock Text=""/>
+					<md:MarkdownScrollViewer xml:space="preserve" Margin="5">
+						
+						If you like the app, please [support me](https://ko-fi.com/scp055)!
+
+					</md:MarkdownScrollViewer>
 					<TextBlock DockPanel.Dock="Bottom" VerticalAlignment="Bottom" Text="{Binding VERSION}"/>
 				</DockPanel>
 			</TabItem>
