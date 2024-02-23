@@ -22,18 +22,8 @@ namespace UFOPlayer.ViewModels
 
         public async void pingDevice()
         {
-            EventBus.Instance.InvokeAction(new Script.ScriptAction(0, 0, 24));
-            await Task.Delay(500);
-            EventBus.Instance.InvokeAction(new Script.ScriptAction(0, 0, 0));
-            await Task.Delay(500);
-
-            EventBus.Instance.InvokeAction(new Script.ScriptAction(0, 0, 24));
-            await Task.Delay(500);
-            EventBus.Instance.InvokeAction(new Script.ScriptAction(0, 0, 0));
-            await Task.Delay(500);
-
-            EventBus.Instance.InvokeAction(new Script.ScriptAction(0, 0, 24));
-            await Task.Delay(1000);
+            EventBus.Instance.InvokeAction(new Script.ScriptAction(0, 0, -10));
+            await Task.Delay(5000);
             EventBus.Instance.InvokeAction(new Script.ScriptAction(0, 0, 0));
         }
     }

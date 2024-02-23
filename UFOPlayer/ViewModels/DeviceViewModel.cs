@@ -76,11 +76,11 @@ namespace UFOPlayer.ViewModels
 
         public void actionEventHandler(object sender, ActionEventArgs e)
         {
-            Debug.WriteLine("Invoked");
+            
             if (gatt == null)
                 return;
             ScriptAction action = e.ScriptAction;
-            
+            Debug.WriteLine(string.Format("Actions: ({0},{1})", action.Right, action.Left));
             if (DeviceSettings.IsFlipped)
             {
                 action = new ScriptAction(action.Right, action.Left);

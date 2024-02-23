@@ -111,6 +111,7 @@ namespace UFOPlayer.ViewModels
             } else
             {
                 PlaybackClock.Pause();
+                EventBus.Instance.InvokeAction(new ScriptAction(0,0));
             }
         }
 

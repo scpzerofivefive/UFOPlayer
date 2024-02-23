@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -8,7 +9,7 @@ namespace UFOPlayer.Script
 {
     public class ScriptAction
     {
-        public int Timestamp { get; set; }
+        public int Timestamp { get; set; } //in milliseconds
         public sbyte Left { get; set; }
         public sbyte Right { get; set; }
 
@@ -30,7 +31,7 @@ namespace UFOPlayer.Script
 
         private byte getSignedMagnitude(sbyte input)
         {
-            return input < 0 ? (byte)(~input + 1) : (byte)input;
+            return input < 0 ? (byte)(~input+129) : (byte)input;
         }
     }
 }
