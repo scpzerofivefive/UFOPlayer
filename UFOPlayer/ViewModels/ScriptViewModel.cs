@@ -139,7 +139,7 @@ namespace UFOPlayer.ViewModels
 
         public void loadFile(IStorageFile file)
         {
-
+            EventBus.Instance.InvokeAction(new ScriptAction(0, 0));
             if (!file.Name.EndsWith(".csv"))
             {
                 return;
