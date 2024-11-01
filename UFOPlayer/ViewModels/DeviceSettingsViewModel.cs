@@ -12,6 +12,7 @@ namespace UFOPlayer.ViewModels
     public class DeviceSettingsViewModel : ViewModelBase
     {
         public bool IsFlipped { get; set; }
+        public int MinPower { get; set; } = 0;
 
         public ReactiveCommand<Unit, Unit> TestCommand { get; } 
 

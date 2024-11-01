@@ -80,13 +80,44 @@ namespace UFOPlayer.ViewModels
             if (gatt == null)
                 return;
             ScriptAction action = e.ScriptAction;
-            Debug.WriteLine(string.Format("Actions: ({0},{1})", action.Right, action.Left));
+            
             if (DeviceSettings.IsFlipped)
             {
                 action = new ScriptAction(action.Right, action.Left);
             }
 
+            if (DeviceSettings.MinPower > 0)
+            {
+                sbyte l = Math.Abs(action.Left);
+                sbyte r = Math.Abs(action.Right);
+
+                if (l > 0)
+                {
+                    l = (sbyte)convertRange(DeviceSettings.MinPower, l);
+                }
+                if (r > 0)
+                {
+                    r = (sbyte)convertRange(DeviceSettings.MinPower, r);
+                }
+                if (action.Left < 0)
+                {
+                    l = (sbyte) (l * -1);
+                }
+                if (action.Right < 0)
+                {
+                    r = (sbyte)(r * -1);
+                }
+                
+                action = new ScriptAction(l, r);
+            }
+
+            Debug.WriteLine(string.Format("Actions: ({0},{1})", action.Right, action.Left));
             gatt.WriteValueWithoutResponseAsync(action.getBuffer());
+        }
+
+        public int convertRange(int newMin, int oldVal)
+        {
+            return newMin + ((oldVal - 1) * (100 - newMin)) / 99;
         }
 
 

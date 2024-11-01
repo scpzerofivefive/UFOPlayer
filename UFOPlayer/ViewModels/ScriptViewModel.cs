@@ -53,6 +53,7 @@ namespace UFOPlayer.ViewModels
                     prevAction = Actions[i];
                     i++;
                 }
+
                 if (i != nextActionIndex)
                 {
                     EventBus.Instance.InvokeAction(prevAction);
