@@ -10,6 +10,7 @@ using UFOPlayer.Script;
 using Avalonia.Platform;
 using Avalonia.Rendering.SceneGraph;
 using System.Diagnostics;
+using Avalonia.Input;
 
 namespace UFOPlayer.Views
 {
@@ -22,12 +23,16 @@ namespace UFOPlayer.Views
         public static readonly StyledProperty<int> ScrubberProperty =
             AvaloniaProperty.Register<ScriptVisualizerView, int>(nameof(Scrubber), defaultValue: 1);
 
+        public float zoom
+        {
+            get; set;
+        } = 1.0f;
+
         public int Duration
         {
             get => GetValue(DurationProperty);
             set => SetValue(DurationProperty, value);
         }
-
         public List<ScriptAction> Actions
         {
             get => GetValue(ActionsProperty);
@@ -40,6 +45,39 @@ namespace UFOPlayer.Views
             set => SetValue(ScrubberProperty, value);
         }
 
+        protected override void OnPointerWheelChanged(PointerWheelEventArgs e)
+        {
+            base.OnPointerWheelChanged(e);
+            // Change Scrubber based on scroll delta
+
+            if (Actions == null || Actions.Count == 0)
+            {
+                return;
+            }
+
+            if (e.Delta.Y != 0)
+            {
+                zoom = zoom + (.025f * (float) e.Delta.Y);
+            }
+
+            zoom = Math.Max(.025f, Math.Min(zoom, 1f));
+
+
+            if (zoom < 1.0f)
+            {
+                int scale = (int) Math.Round(zoom * Duration / 2.0f);
+                visualizer.StartBound = Scrubber - scale;
+                visualizer.EndBound = Scrubber + scale;
+
+            } else
+            {
+                visualizer.StartBound = 0;
+                visualizer.EndBound = Duration;
+            }
+
+            InvalidateVisual();
+        }
+
 
         Visualizer visualizer;
 
@@ -48,6 +86,7 @@ namespace UFOPlayer.Views
             InitializeComponent();
 
             visualizer = new Visualizer();
+            
         }
 
         private void InitializeComponent()
@@ -62,9 +101,22 @@ namespace UFOPlayer.Views
 
             if (change.Property == ScrubberProperty || change.Property == ActionsProperty || change.Property == DurationProperty)
             {
-                visualizer.Scrubber = Scrubber;
+                visualizer.Position = Scrubber;
                 visualizer.EndBound = Duration;
                 visualizer.Actions = Actions;
+
+                if (zoom < 1.0f)
+                {
+                    int scale = (int)Math.Round(zoom * Duration / 2.0f);
+                    visualizer.StartBound = Scrubber - scale;
+                    visualizer.EndBound = Scrubber + scale;
+
+                }
+                else
+                {
+                    visualizer.StartBound = 0;
+                    visualizer.EndBound = Duration;
+                }
                 InvalidateVisual();  // Triggers OnRender
             }
 
@@ -80,13 +132,31 @@ namespace UFOPlayer.Views
                 IsAntialias = true
             };
 
+            private SKPaint gray { get; } = new SKPaint
+            {
+                Color = new SKColor(49, 49, 49),
+                StrokeWidth = .5f,
+                IsAntialias = true
+            };
+
+            private SKPaint white = new SKPaint
+            {
+                Color = new SKColor(70, 70, 70),
+                StrokeWidth = 1,
+                IsAntialias = true,
+                Style = SKPaintStyle.Stroke
+            };
+
             public Rect Bounds { get; set; }
 
-            public int Scrubber { get; set; } = 0;
+            public int Position { get; set; } = 0;
 
             public int StartBound { get; set; } = 0;
 
             public int EndBound { get; set; } = 0;
+
+
+
 
             public List<ScriptAction> Actions { get; set; } = new List<ScriptAction>();
 
@@ -95,25 +165,24 @@ namespace UFOPlayer.Views
             public bool Equals(ICustomDrawOperation? other) => other == this;
 
             // not sure what goes here....
-            public bool HitTest(Point p) { return false; }
+            public bool HitTest(Point p) { return true; }
 
             private void Render(SKCanvas canvas)
             {
 
-                if (Scrubber != 0 && EndBound != 0)
+                if (Position != 0 && EndBound != 0)
                 {
                     DrawScrubber(canvas);
                 }
 
-                if (Actions.Count != 0)
-                {
-                    DrawActions(canvas);
-                }
-                
+                DrawActions(canvas);
+
             }
             private void DrawScrubber(SKCanvas canvas)
             {
-                float scrubberX = (float)(Scrubber * Bounds.Width / EndBound);
+                int pos = Position - StartBound;
+                int end = EndBound - StartBound;
+                float scrubberX = (float)(pos * Bounds.Width / end);
 
                 canvas.DrawLine(scrubberX, 0, scrubberX, (float)Bounds.Height, black);
             }
@@ -125,19 +194,23 @@ namespace UFOPlayer.Views
 
                 using var redPaint = new SKPaint
                 {
-                    Color = SKColors.Red.WithAlpha(128),
+                    Color = SKColors.Red,
                     StrokeWidth = 1,
                     IsAntialias = true,
-                    Style = SKPaintStyle.Stroke
+                    Style = SKPaintStyle.Stroke,
+                    BlendMode = SKBlendMode.Plus
                 };
 
                 using var bluePaint = new SKPaint
                 {
-                    Color = SKColors.Blue.WithAlpha(128),
+                    Color = new SKColor(47, 117, 245),
                     StrokeWidth = 1,
                     IsAntialias = true,
-                    Style = SKPaintStyle.Stroke
+                    Style = SKPaintStyle.Stroke,
+                    BlendMode = SKBlendMode.Plus
                 };
+
+                
 
                 // Paths for the left and right channels
                 using var leftChannelPath = new SKPath();
@@ -152,22 +225,26 @@ namespace UFOPlayer.Views
                 rightChannelPath.MoveTo(0, prevYRight);
                 foreach (var action in Actions)
                 {
-                    float x = (float)(action.Timestamp * Bounds.Width / EndBound);
+                    int time = action.Timestamp - StartBound;
+                    int end = EndBound - StartBound;
+                    float x = (float)(time * Bounds.Width / end);
                     float yLeft = (float)((action.Left * (Bounds.Height / 2) / 100) + (Bounds.Height / 2));
                     float yRight = (float)((action.Right * (Bounds.Height / 2) / 100) + (Bounds.Height / 2));
-
-                    
-
                     // Add line segments to the paths
                     leftChannelPath.LineTo(x, prevYLeft);
                     leftChannelPath.LineTo(x, yLeft);
 
                     rightChannelPath.LineTo(x, prevYRight);
                     rightChannelPath.LineTo(x, yRight);
-
                     prevX = x;
                     prevYLeft = yLeft;
                     prevYRight = yRight;
+
+                    if (action.Timestamp > EndBound)
+                    {
+                        break;
+                    }
+
                 }
 
                 leftChannelPath.LineTo((float)Bounds.Width, (float)(Bounds.Height / 2));
@@ -187,9 +264,15 @@ namespace UFOPlayer.Views
                 {
                     using var lease = leaseFeature.Lease();
                     var canvas = lease.SkCanvas;
-                    canvas.Clear(SKColors.White);
+                    canvas.Clear(new SKColor(32, 32, 32));
+                    for (int i = 0; i < 10; i++)
+                    {
+                        canvas.DrawLine(0, i * (float)Bounds.Height / 10, (float)Bounds.Width, i * (float)Bounds.Height / 10, gray);
+                    }
                     Render(canvas);
-                    canvas.DrawLine(0, (float)Bounds.Height / 2, (float)Bounds.Width, (float)Bounds.Height / 2, black);
+                    canvas.DrawLine(0, (float)Bounds.Height / 2, (float)Bounds.Width, (float)Bounds.Height / 2, white);
+
+                    
                 }
             }
         }
