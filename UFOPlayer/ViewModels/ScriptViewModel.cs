@@ -17,7 +17,7 @@ using UFOPlayer.Script;
 using UFOPlayer.Events;
 using System.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
-using UFOPlayer.Util;
+using UFOPlayer.Helpers;
 
 namespace UFOPlayer.ViewModels
 {

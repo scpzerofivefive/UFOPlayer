@@ -5,9 +5,5 @@
              mc:Ignorable="d"
              x:Class="UFOPlayer.Views.ScriptVisualizerView"
 			 xmlns:vm="clr-namespace:UFOPlayer.ViewModels">
-	<Canvas x:Name="canvas" Background="LightGray">
-		<Canvas x:Name="ScrubberLayer"/>
-		<Canvas x:Name="ActionLayer"></Canvas>
-	</Canvas>
 	
 </UserControl>

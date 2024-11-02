@@ -10,7 +10,7 @@ using Avalonia.Platform.Storage;
 using Windows.Storage;
 using System.Diagnostics;
 
-namespace UFOPlayer.Util
+namespace UFOPlayer.Helpers
 {
     public class FileLoader
     {
@@ -19,19 +19,19 @@ namespace UFOPlayer.Util
         {
             await using var stream = await file.OpenReadAsync();
             return await loadFile(stream);
-            
+
         }
-        public async Task<List<ScriptAction>> loadFile(String filepath)
+        public async Task<List<ScriptAction>> loadFile(string filepath)
         {
             StorageFile storageFile = await StorageFile.GetFileFromPathAsync(filepath);
             Stream stream = (await storageFile.OpenReadAsync()).AsStream();
             return await loadFile(stream);
         }
 
-        public async Task<String[]> getCorrespondingScriptPaths(String fullPath)
+        public async Task<string[]> getCorrespondingScriptPaths(string fullPath)
         {
-            String relatedScriptPath = "";
-            String fileType = ".csv";
+            string relatedScriptPath = "";
+            string fileType = ".csv";
             try
             {
                 // Combine the provided path and filename into a full path
@@ -41,7 +41,7 @@ namespace UFOPlayer.Util
 
                 // Use LINQ to filter files based on the specified criteria
                 string[] matchingFiles = allFiles
-                    .Where(file => Path.GetFileName(file).ToLower().Contains("ufo") 
+                    .Where(file => Path.GetFileName(file).ToLower().Contains("ufo")
                     && Path.GetExtension(file).Equals(fileType, StringComparison.OrdinalIgnoreCase))
                     .ToArray();
                 return matchingFiles;
@@ -49,25 +49,25 @@ namespace UFOPlayer.Util
             catch (Exception ex)
             {
                 Console.WriteLine($"An error occurred: {ex.Message}");
-                return new string[] {""};
+                return new string[] { "" };
             }
-            
-            
+
+
         }
 
         private async Task<List<ScriptAction>> loadFile(Stream stream)
         {
             using var streamReader = new StreamReader(stream);
             // Reads all the content of file as a text.
-            String fileContent = await streamReader.ReadToEndAsync();
-            String[] lines = fileContent.Split('\n');
+            string fileContent = await streamReader.ReadToEndAsync();
+            string[] lines = fileContent.Split('\n');
             List<ScriptAction> list = new List<ScriptAction>();
-            foreach (String line in lines)
+            foreach (string line in lines)
             {
                 try
                 {
                     ScriptAction action;
-                    String[] values = line.Split(",");
+                    string[] values = line.Split(",");
                     int time = int.Parse(values[0]) * 100;
                     if (values.Length == 3)
                     {
@@ -96,14 +96,14 @@ namespace UFOPlayer.Util
             return list;
         }
 
-        
 
-        private sbyte getPowerValue(String polarity, String power)
+
+        private sbyte getPowerValue(string polarity, string power)
         {
             sbyte value = sbyte.Parse(power);
             if (polarity == "1")
             {
-                return (sbyte)(-value);
+                return (sbyte)-value;
             }
             return value;
         }
