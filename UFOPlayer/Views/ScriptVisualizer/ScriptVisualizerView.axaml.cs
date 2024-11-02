@@ -49,28 +49,28 @@ namespace UFOPlayer.Views
         protected override void OnPointerWheelChanged(PointerWheelEventArgs e)
         {
             base.OnPointerWheelChanged(e);
-            // Change Scrubber based on scroll delta
+
+            float minZoom = (float)((1000/80) /( Duration / Width));
 
             if (Actions == null || Actions.Count == 0)
             {
                 return;
             }
 
-            if (e.Delta.Y != 0)
-            {
-                zoom = zoom - (.025f * (float) e.Delta.Y);
-            }
+            // Adjust zoom increment based on the current zoom level
+            float zoomIncrement = 0.1f * (zoom);
 
-            zoom = Math.Max(.025f, Math.Min(zoom, 1f));
-
+            // Apply the scroll delta with the adjusted increment
+            zoom -= zoomIncrement * (float)e.Delta.Y;
+            zoom = Math.Clamp(zoom, minZoom, 1f);
 
             if (zoom < 1.0f)
             {
-                int scale = (int) Math.Round(zoom * Duration / 2.0f);
+                int scale = (int)Math.Round(zoom * Duration / 2.0f);
                 visualizer.StartBound = Scrubber - scale;
                 visualizer.EndBound = Scrubber + scale;
-
-            } else
+            }
+            else
             {
                 visualizer.StartBound = 0;
                 visualizer.EndBound = Duration;
@@ -78,6 +78,7 @@ namespace UFOPlayer.Views
 
             InvalidateVisual();
         }
+
 
 
         Visualizer visualizer;
