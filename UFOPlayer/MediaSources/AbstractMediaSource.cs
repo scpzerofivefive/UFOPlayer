@@ -15,7 +15,9 @@ namespace UFOPlayer.MediaSources
     public delegate void ConnectedEventHandler(object sender, ConnectionEventArg e);
     public abstract class AbstractMediaSource : IDisposable
     {
-        public bool _isConnected {  get; set; } 
+        public bool _isConnected {  get; set; }
+
+
         public bool IsConnected { 
             get
             {

@@ -130,6 +130,7 @@ namespace UFOPlayer.MediaSources
 
         private static readonly CultureInfo[] Cultures;
 
+
         static WhirligigMediaSource()
         {
             Cultures = new[]

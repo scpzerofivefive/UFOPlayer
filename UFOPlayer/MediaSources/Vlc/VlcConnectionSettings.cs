@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace UFOPlayer.MediaSources
+namespace UFOPlayer.MediaSources.Vlc
 {
     public class VlcConnectionSettings
     {

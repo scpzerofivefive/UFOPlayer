@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace UFOPlayer.Script
+namespace UFOPlayer.Scripts
 {
     public class ScriptAction
     {
@@ -25,13 +25,13 @@ namespace UFOPlayer.Script
 
         public byte[] getBuffer()
         {
-            byte[] arr = { 0x05, getSignedMagnitude(Left), getSignedMagnitude(Right)};
+            byte[] arr = { 0x05, getSignedMagnitude(Left), getSignedMagnitude(Right) };
             return arr;
         }
 
         private byte getSignedMagnitude(sbyte input)
         {
-            return input < 0 ? (byte)(~input+129) : (byte)input;
+            return input < 0 ? (byte)(~input + 129) : (byte)input;
         }
     }
 }

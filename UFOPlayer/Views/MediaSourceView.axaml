@@ -5,19 +5,38 @@
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="UFOPlayer.Views.MediaSourceView"
 			 xmlns:vm="clr-namespace:UFOPlayer.ViewModels"
+			 xmlns:local="clr-namespace:UFOPlayer"
 			 x:DataType="vm:MediaSourceViewModel"
 			 xmlns:views="clr-namespace:UFOPlayer.Views">
 
+
 	<StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
 		<!-- First Dropdown Box -->
-		<Label VerticalAlignment="Center" Content="Media Source:"/>
-		
-		<ComboBox x:Name="mediaOptions" Width="100" Margin="5" VerticalAlignment="Center" ItemsSource="{Binding PlaybackModes}">
-		</ComboBox>
-
+		<Button Classes="Front" Classes.Connected="{Binding IsConnected}" >
+			<Button.Styles>
+				<Style Selector="Button.Connected">
+					<Setter Property="Background" Value="LightGray"/>
+				</Style>
+			</Button.Styles>
+			<Svg Path="{Binding SelectedSourceFactory.IconPath}" Css=".Black { fill: gray; }" Width="22" Height="22"/>
+			<Button.Flyout>
+			<Flyout>
+				<ListBox ItemsSource="{Binding SourceList}" 
+						 SelectedItem="{Binding SelectedSourceFactory, Mode=TwoWay}">
+					<ListBox.ItemTemplate>
+						<DataTemplate>
+							<TextBlock Text="{Binding Name}" />
+						</DataTemplate>
+					</ListBox.ItemTemplate>
+				</ListBox>
+			</Flyout>
+			</Button.Flyout>
+		</Button>
+		<!--
 		<views:StatusView Margin="5" VerticalAlignment="Center" Width="20" Height="20"
 						  Disconnected="{StaticResource cellular_data_off_regular}" 
 						  Connected="{StaticResource cellular_data_2_regular}"
 						  Status="{Binding Status}"/>
+						  -->
 	</StackPanel>
 </UserControl>

@@ -13,53 +13,65 @@ using Avalonia.Interactivity;
 using Avalonia.Platform.Storage;
 using System.IO;
 using System.Diagnostics;
-using UFOPlayer.Script;
 using UFOPlayer.Events;
 using System.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
-using UFOPlayer.Helpers;
+using UFOPlayer.Scripts;
 
 namespace UFOPlayer.ViewModels
 {
-    public partial class ScriptViewModel : ObservableObject, INotifyPropertyChanged
+    public partial class ScriptViewModel : ObservableObject, INotifyPropertyChanged, IDisposable
     {
 
-        public ScriptViewModel() {
+        private CancellationTokenSource _cancellationTokenSource;
+
+        public ScriptViewModel()
+        {
             EventBus.DurationChangedEvent += HandleDurationChanged;
             EventBus.ProgressChangedEvent += HandleProgressChanged;
             EventBus.PlayingChangedEvent += HandlePlayingChanged;
             EventBus.FileChangedEvent += HandleFileChanged;
             EventBus.PlaybackRateChangedEvent += HandlePlaybackRateChanged;
-            Task.Run(async () => { scriptLoop(); });
+
+            // Initialize the cancellation token source
+            _cancellationTokenSource = new CancellationTokenSource();
+
+            // Start the script loop in a new task
+            Task.Run(async () =>
+            {
+                await ScriptLoop(_cancellationTokenSource.Token);
+            });
+
             Debug.WriteLine("New Thread");
         }
 
-        public async void scriptLoop()
+        public async Task ScriptLoop(CancellationToken cancellationToken)
         {
-            while (true)
+            while (!cancellationToken.IsCancellationRequested)
             {
+
                 TimeSpan timeSpan = PlaybackClock.getTimeSpan();
-                
-                int time = (int)timeSpan.TotalMilliseconds;
-                Scrubber = time;
-                String newPlaybackTime = $"{(int)timeSpan.TotalHours:D2}:{timeSpan.Minutes:D2}:{timeSpan.Seconds:D2}";
-                if (!newPlaybackTime.Equals(PlaybackTime))
+                int currentTimeMs = (int)timeSpan.TotalMilliseconds;
+                Scrubber = currentTimeMs;
+
+                // Format playback time
+                string newPlaybackTime = $"{(int)timeSpan.TotalHours:D2}:{timeSpan.Minutes:D2}:{timeSpan.Seconds:D2}";
+
+                // Update playback time only if changed
+                if (newPlaybackTime != PlaybackTime)
                 {
                     PlaybackTime = newPlaybackTime;
                 }
-                int i = nextActionIndex;
-                while (i < Actions.Count && Actions[i].Timestamp < time)
+
+                // Process actions based on current playback time
+                while (nextActionIndex < Actions.Count && Actions[nextActionIndex].Timestamp < currentTimeMs)
                 {
-                    prevAction = Actions[i];
-                    i++;
+                    prevAction = Actions[nextActionIndex];
+                    EventBus.Instance.InvokeAction(prevAction);
+                    nextActionIndex++;
                 }
 
-                if (i != nextActionIndex)
-                {
-                    EventBus.Instance.InvokeAction(prevAction);
-                    nextActionIndex = i;
-                }
-                await Task.Delay(1);
+                await Task.Delay(5);
             }
         }
 
@@ -68,7 +80,7 @@ namespace UFOPlayer.ViewModels
 
         private FileLoader fileLoader = new FileLoader();
 
-        public PlaybackClock PlaybackClock { get;} = new PlaybackClock();
+        public MediaSyncController PlaybackClock { get;} = new MediaSyncController();
 
         [ObservableProperty]
         private int _scrubber = 1;
@@ -136,7 +148,12 @@ namespace UFOPlayer.ViewModels
 
         //=================================================================================
 
-
+        public void Dispose()
+        {
+            // Cancel the script loop if needed
+            _cancellationTokenSource.Cancel();
+            _cancellationTokenSource.Dispose();
+        }
 
         public void loadFile(IStorageFile file)
         {
@@ -151,6 +168,7 @@ namespace UFOPlayer.ViewModels
             });
         }
 
-        
+        [ObservableProperty]
+        private VisualizerMode _mode = VisualizerMode.Line;
     }
 }

@@ -4,12 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace UFOPlayer.MediaSources
+namespace UFOPlayer
 {
-    enum PlaybackMode
+    public enum VisualizerMode
     {
-        None,
-        VLC,
-        DeoVR
+        Line,
+        Bar
     }
 }

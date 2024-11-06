@@ -4,13 +4,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace UFOPlayer.MediaSources
+namespace UFOPlayer.MediaSources.Dummy
 {
-    public class OFSMediaSource : AbstractMediaSource
+    internal class DummyMediaSource : AbstractMediaSource
     {
+
         public override void Dispose()
         {
-            throw new NotImplementedException();
         }
     }
 }

@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 using System.Windows.Interop;
 using System.Windows.Media.Media3D;
 using UFOPlayer.Events;
-using UFOPlayer.Script;
+using UFOPlayer.Scripts;
 
 namespace UFOPlayer.ViewModels
 {
@@ -197,6 +197,14 @@ namespace UFOPlayer.ViewModels
         protected virtual void OnPropertyChanged(string propertyName)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+
+        [ObservableProperty]
+        private bool _isConnected = false;
+
+        partial void OnStatusChanged(ConnectionStatus status)
+        {
+            IsConnected = status == ConnectionStatus.Connected;
         }
     }
 

@@ -16,6 +16,7 @@ namespace UFOPlayer.MediaSources
     {
         public const string DefaultEndpoint = "localhost:23554";
 
+
         private const bool UseLittleEndian = true;
 
         private static readonly TimeSpan ConnectTimeout = TimeSpan.FromSeconds(3.0);
@@ -30,8 +31,6 @@ namespace UFOPlayer.MediaSources
         private HereSphereApiData _previousData;
         private SimpleTcpConnectionSettings _connectionSettings;
         private bool _disposed;
-
-
 
         public HereSphereMediaSource(SimpleTcpConnectionSettings connectionSettings)
         {

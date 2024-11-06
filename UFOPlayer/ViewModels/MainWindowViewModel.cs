@@ -1,12 +1,25 @@
-﻿using System.Diagnostics;
+﻿using Avalonia.Controls;
+using System.Diagnostics;
 using System.Runtime.Serialization;
 using UFOPlayer.Events;
+using Avalonia.Controls;
+using Avalonia.Media;
+using Avalonia.Styling;
+using CommunityToolkit.Mvvm.ComponentModel;
+using Avalonia;
+using System.Collections.ObjectModel;
+using ReactiveUI;
+using System.Reactive;
+using DynamicData;
+using System;
+using Material.Icons;
 
 namespace UFOPlayer.ViewModels
 {
     [DataContract]
-    public class MainWindowViewModel : ViewModelBase
+    public partial class MainWindowViewModel : ObservableObject
     {
+
         [IgnoreDataMember]
         public ScriptViewModel Script { get; } = new ScriptViewModel();
 
@@ -36,10 +49,32 @@ namespace UFOPlayer.ViewModels
             EventBus.Instance.InvokeSetttingsUpdate();
         }
 
+
         public MainWindowViewModel()
         {
             Media = new MediaSourceViewModel();
+            onVisualizerModePressed = ReactiveCommand.Create(cycleVisualizer);
         }
 
+        public ReactiveCommand<Unit, Unit> onVisualizerModePressed { get; }
+
+        private void cycleVisualizer()
+        {
+            if (Script.Mode == VisualizerMode.Line)
+            {
+                Script.Mode = VisualizerMode.Bar;
+                IconKind = MaterialIconKind.ChartBar;
+
+            } else
+            {
+                Script.Mode = VisualizerMode.Line;
+                IconKind = MaterialIconKind.ChartLine;
+            }
+            Debug.WriteLine(Script.Mode);
+        }
+
+
+        [ObservableProperty]
+        private MaterialIconKind _iconKind =  MaterialIconKind.ChartLine;
     }
 }

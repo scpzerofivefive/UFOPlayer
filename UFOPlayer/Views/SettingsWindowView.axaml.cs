@@ -6,7 +6,7 @@ using ReactiveUI;
 using System;
 using System.Diagnostics;
 using System.Reactive;
-using UFOPlayer.MediaSources;
+using UFOPlayer.MediaSources.Vlc;
 using UFOPlayer.ViewModels;
 
 namespace UFOPlayer;

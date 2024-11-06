@@ -5,6 +5,7 @@ using System.Diagnostics;
 using UFOPlayer.ViewModels;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.Window;
 
+
 namespace UFOPlayer.Views
 {
     public partial class MainWindow : Window

@@ -5,12 +5,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using static System.Windows.Forms.Design.AxImporter;
-using UFOPlayer.Script;
 using Avalonia.Platform.Storage;
 using Windows.Storage;
 using System.Diagnostics;
 
-namespace UFOPlayer.Helpers
+namespace UFOPlayer.Scripts
 {
     public class FileLoader
     {

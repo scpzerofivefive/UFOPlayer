@@ -9,23 +9,56 @@
 		x:DataType="vm:MainWindowViewModel"
         Icon="/Assets/avalonia-logo.ico"
         Title="UFOPlayer"
-		CanResize="False">
+		CanResize="False"
+		TransparencyLevelHint=""
+		xmlns:materialIcons="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
+		>
 	<Design.DataContext>
 		<vm:MainWindowViewModel/>
 	</Design.DataContext>
-	<Grid
-		ColumnDefinitions="Auto,Auto,Auto"
-		RowDefinitions="Auto,Auto">
-		<views:DeviceView DataContext="{Binding Device}" Grid.Row="0" Grid.Column="0"/>
-		<views:MediaSourceView DataContext="{Binding Media}" Grid.Row="0" Grid.Column="1"/>
-		<Button VerticalAlignment="Center" Grid.Row="0" Grid.Column="2" Background="Transparent"
+	<Grid>
+		<Grid.ColumnDefinitions>
+			<ColumnDefinition Width="*" />
+			<!-- Left column takes available space -->
+			<ColumnDefinition Width="Auto" />
+			<!-- Right column takes only necessary space -->
+		</Grid.ColumnDefinitions>
+		<Grid.RowDefinitions>
+			<RowDefinition Height="Auto"/>
+			<RowDefinition Height="Auto"/>
+		</Grid.RowDefinitions>
+
+		<!-- Left aligned items -->
+		<StackPanel Grid.Column="0" Orientation="Horizontal" HorizontalAlignment="Left" Margin="5,0,0,0">
+			<TextBlock Text="{Binding Script.PlaybackTime}"
+				   DockPanel.Dock="Left"
+				   Width="60"
+				   Margin="10"
+				   VerticalAlignment="Center"
+				   HorizontalAlignment="Right"/>
+			<views:DeviceView Margin="5" DataContext="{Binding Device}"/>
+			<views:MediaSourceView Margin="5" DataContext="{Binding Media}"/>
+		</StackPanel>
+
+		<!-- Right aligned items -->
+		<StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right" Margin="5">
+			<Button Classes="Front" VerticalAlignment="Center" Grid.Row="0" Grid.Column="2" Background="Transparent"
+					Foreground="Gray" Margin="2" Command="{Binding onVisualizerModePressed}"
+				>
+				<materialIcons:MaterialIcon Kind="{Binding IconKind}" Height="20" Width="20"/>
+			</Button>
+			<Button Classes="Front" VerticalAlignment="Center" Grid.Row="0" Grid.Column="2" Background="Transparent"
+					Foreground="Gray" Margin="2"
 				Click="OpenSettings">
-			<PathIcon Data="{StaticResource settings_regular}" />
-		</Button>
-		<views:ScriptView DataContext="{Binding Script}" 
+				<materialIcons:MaterialIcon Kind="Cog" Height="20" Width="20"/>
+			</Button>
+		</StackPanel>
+
+		
+		<views:ScriptView DataContext="{Binding Script}"
 						  Grid.Row="1"
 						  Grid.Column="0"
-						  Grid.ColumnSpan="3"/>
+						  Grid.ColumnSpan="2"/>
 	</Grid>
 
 </Window>

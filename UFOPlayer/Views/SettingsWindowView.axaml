@@ -4,46 +4,55 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d" SizeToContent="WidthAndHeight"
         x:Class="UFOPlayer.SettingsWindowView"
-        Title="SettingsWindowView"
+        Title="Settings"
 		xmlns:vm="clr-namespace:UFOPlayer.ViewModels"
-		x:DataType="vm:SettingsViewModel">
+		x:DataType="vm:SettingsViewModel"
+		Icon=""
+		>
 	<StackPanel>
-		<TabControl TabStripPlacement="Left" MinWidth="500" MinHeight="500">
-			<!-- Tab Items go here -->
-			<TabItem Header="UFOPlayer">
-				<DockPanel>
-					<TextBlock Text=""/>
-					<TextBlock DockPanel.Dock="Bottom" VerticalAlignment="Bottom" Text="{Binding VERSION}"/>
-				</DockPanel>
-			</TabItem>
-			<TabItem Header="Media Sources">
-				<StackPanel>
+		<StackPanel>
+			
+				<Border BorderBrush="Gray" BorderThickness="1" Padding="10" Margin="10" CornerRadius="5">
 					<StackPanel>
-						<TextBlock Text="VLC" FontWeight="Bold"/>
+						<TextBlock Text="File Matching" FontWeight="Bold" Margin="0,0,0,10"/>
 						<DockPanel Margin="5">
 							<Button DockPanel.Dock="Right" Content="Use Default" Click="BtnVlcDefault_Click" Margin="5" />
-							<TextBlock Text="IP : Port" VerticalAlignment="Center" Margin="5" Width="80"/>
+							<TextBlock Text="Regex: " VerticalAlignment="Center" Margin="5" Width="80"/>
 							<TextBox Text="{Binding VlcEndpoint}" VerticalAlignment="Center" Margin="5"/>
 						</DockPanel>
-						<DockPanel Margin="5">
-							<TextBlock Text="Password" VerticalAlignment="Center" Margin="5" Width="80"/>
-							<TextBox Text="{Binding VlcPassword}" VerticalAlignment="Center" Margin="5"/>
-						</DockPanel>
 					</StackPanel>
+
+				</Border>
+
+				<Border BorderBrush="Gray" BorderThickness="1" Padding="10" Margin="10" CornerRadius="5">
 					<StackPanel>
-						<TextBlock Text="DeoVR / HereSphereVR" FontWeight="Bold"/>
-						<DockPanel Margin="5">
-							<Button DockPanel.Dock="Right" Content="Use Default" Click="BtnDeoVRDefault_Click" Margin="5" />
-							<TextBlock Text="IP : Port" VerticalAlignment="Center" Margin="5" Width="80"/>
-							<TextBox Text="{Binding DeoVrEndpoint}" VerticalAlignment="Center" Margin="5"/>
-						</DockPanel>
+						<StackPanel>
+							<TextBlock Text="Media Source Settings" FontWeight="Bold" Margin="0,0,0,10"/>
+							<TextBlock Text="VLC" FontWeight="Bold"/>
+							<DockPanel Margin="5">
+								<Button DockPanel.Dock="Right" Content="Use Default" Click="BtnVlcDefault_Click" Margin="5" />
+								<TextBlock Text="IP : Port" VerticalAlignment="Center" Margin="5" Width="80"/>
+								<TextBox Text="{Binding VlcEndpoint}" VerticalAlignment="Center" Margin="5"/>
+							</DockPanel>
+							<DockPanel Margin="5">
+								<TextBlock Text="Password" VerticalAlignment="Center" Margin="5" Width="80"/>
+								<TextBox Text="{Binding VlcPassword}" VerticalAlignment="Center" Margin="5"/>
+							</DockPanel>
+						</StackPanel>
+						<StackPanel>
+							<TextBlock Text="DeoVR / HereSphereVR" FontWeight="Bold"/>
+							<DockPanel Margin="5">
+								<Button DockPanel.Dock="Right" Content="Use Default" Click="BtnDeoVRDefault_Click" Margin="5" />
+								<TextBlock Text="IP : Port" VerticalAlignment="Center" Margin="5" Width="80"/>
+								<TextBox Text="{Binding DeoVrEndpoint}" VerticalAlignment="Center" Margin="5"/>
+							</DockPanel>
+						</StackPanel>
 					</StackPanel>
-				</StackPanel>
-
-
-			</TabItem>
+					
+				</Border>
 			
-		</TabControl>
+		</StackPanel>
+		<TextBlock Margin="5"  VerticalAlignment="Bottom" Text="{Binding VERSION}"/>
 		<DockPanel Grid.Column="1" Margin="5">
 			<Button DockPanel.Dock="Right" Content="Confirm" Click="Btn_Confirm" x:Name="ConfirmButton" Margin="5"/>
 			<Button DockPanel.Dock="Right" Content="Cancel" Click="Btn_Cancel" Margin="5"/>

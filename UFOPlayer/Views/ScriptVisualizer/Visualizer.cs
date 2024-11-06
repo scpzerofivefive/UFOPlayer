@@ -6,15 +6,15 @@ using SkiaSharp;
 using Avalonia.Skia;
 using System;
 using System.Collections.Generic;
-using UFOPlayer.Script;
 using Avalonia.Platform;
 using Avalonia.Rendering.SceneGraph;
 using System.Diagnostics;
 using Avalonia.Input;
+using UFOPlayer.Scripts;
 
 namespace UFOPlayer.Views.ScriptVisualizer
 {
-    class Visualizer : ICustomDrawOperation
+    public class Visualizer : ICustomDrawOperation
     {
         private SKPaint black { get; } = new SKPaint
         {
@@ -55,12 +55,11 @@ namespace UFOPlayer.Views.ScriptVisualizer
 
         public bool Equals(ICustomDrawOperation? other) => other == this;
 
-        // not sure what goes here....
         public bool HitTest(Point p) { return true; }
 
-        private void Render(SKCanvas canvas)
+        public virtual void Render(SKCanvas canvas)
         {
-
+            DrawBackground(canvas);
             if (Position != 0 && EndBound != 0)
             {
                 DrawScrubber(canvas);
@@ -78,76 +77,21 @@ namespace UFOPlayer.Views.ScriptVisualizer
             canvas.DrawLine(scrubberX, 0, scrubberX, (float)Bounds.Height, white);
         }
 
-        private void DrawActions(SKCanvas canvas)
+        public virtual void DrawActions(SKCanvas canvas)
         {
-            if (Actions == null || Actions.Count == 0)
-                return;
-
-            using var redPaint = new SKPaint
-            {
-                Color = SKColors.Red,
-                StrokeWidth = 1,
-                IsAntialias = true,
-                Style = SKPaintStyle.Stroke,
-                BlendMode = SKBlendMode.Plus
-            };
-
-            using var bluePaint = new SKPaint
-            {
-                Color = new SKColor(47, 117, 245),
-                StrokeWidth = 1,
-                IsAntialias = true,
-                Style = SKPaintStyle.Stroke,
-                BlendMode = SKBlendMode.Plus
-            };
-
-
-
-            // Paths for the left and right channels
-            using var leftChannelPath = new SKPath();
-            using var rightChannelPath = new SKPath();
-
-            float prevX = 0;
-            float prevYLeft = (float)(Bounds.Height / 2);
-            float prevYRight = (float)(Bounds.Height / 2);
-
-            // Move to starting points in the paths
-            leftChannelPath.MoveTo(0, prevYLeft);
-            rightChannelPath.MoveTo(0, prevYRight);
-            foreach (var action in Actions)
-            {
-                int time = action.Timestamp - StartBound;
-                int end = EndBound - StartBound;
-                float x = (float)(time * Bounds.Width / end);
-                float yLeft = (float)((action.Left * (Bounds.Height / 2) / 100) + (Bounds.Height / 2));
-                float yRight = (float)((action.Right * (Bounds.Height / 2) / 100) + (Bounds.Height / 2));
-                // Add line segments to the paths
-                leftChannelPath.LineTo(x, prevYLeft);
-                leftChannelPath.LineTo(x, yLeft);
-
-                rightChannelPath.LineTo(x, prevYRight);
-                rightChannelPath.LineTo(x, yRight);
-                prevX = x;
-                prevYLeft = yLeft;
-                prevYRight = yRight;
-
-                if (action.Timestamp > EndBound)
-                {
-                    break;
-                }
-
-            }
-
-            leftChannelPath.LineTo((float)Bounds.Width, (float)(Bounds.Height / 2));
-
-            rightChannelPath.LineTo((float)Bounds.Width, (float)(Bounds.Height / 2));
-
-            // Draw the entire paths as continuous lines
-            canvas.DrawPath(leftChannelPath, redPaint);
-            canvas.DrawPath(rightChannelPath, bluePaint);
+            
         }
 
-        void drawSecondsDivider(SKCanvas canvas)
+        public virtual void DrawBackground(SKCanvas canvas)
+        {
+            canvas.Clear(new SKColor(15, 15, 15));
+            drawSecondsDivider(canvas);
+            for (int i = 0; i < 10; i++)
+            {
+                canvas.DrawLine(0, i * (float)Bounds.Height / 10, (float)Bounds.Width, i * (float)Bounds.Height / 10, gray);
+            }
+        }
+        public void drawSecondsDivider(SKCanvas canvas)
         {
             var paint = new SKPaint
             {
@@ -184,14 +128,11 @@ namespace UFOPlayer.Views.ScriptVisualizer
             {
                 using var lease = leaseFeature.Lease();
                 var canvas = lease.SkCanvas;
-                canvas.Clear(new SKColor(15, 15, 15));
-                drawSecondsDivider(canvas);
-                for (int i = 0; i < 10; i++)
-                {
-                    canvas.DrawLine(0, i * (float)Bounds.Height / 10, (float)Bounds.Width, i * (float)Bounds.Height / 10, gray);
-                }
+                
 
                 Render(canvas);
+
+                //TODO
                 canvas.DrawLine(0, (float)Bounds.Height / 2, (float)Bounds.Width, (float)Bounds.Height / 2, white);
 
 

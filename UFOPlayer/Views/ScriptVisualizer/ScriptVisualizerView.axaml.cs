@@ -6,12 +6,12 @@ using SkiaSharp;
 using Avalonia.Skia;
 using System;
 using System.Collections.Generic;
-using UFOPlayer.Script;
 using Avalonia.Platform;
 using Avalonia.Rendering.SceneGraph;
 using System.Diagnostics;
 using Avalonia.Input;
 using UFOPlayer.Views.ScriptVisualizer;
+using UFOPlayer.Scripts;
 
 namespace UFOPlayer.Views
 {
@@ -23,6 +23,9 @@ namespace UFOPlayer.Views
             AvaloniaProperty.Register<ScriptVisualizerView, int>(nameof(Duration), defaultValue: 1);
         public static readonly StyledProperty<int> ScrubberProperty =
             AvaloniaProperty.Register<ScriptVisualizerView, int>(nameof(Scrubber), defaultValue: 1);
+
+        public static readonly StyledProperty<VisualizerMode> ModeProperty = 
+            AvaloniaProperty.Register<ScriptVisualizerView, VisualizerMode>(nameof(Mode), defaultValue: VisualizerMode.Bar);
 
         public float zoom
         {
@@ -44,6 +47,12 @@ namespace UFOPlayer.Views
         {
             get => GetValue<int>(ScrubberProperty);
             set => SetValue(ScrubberProperty, value);
+        }
+
+        public VisualizerMode Mode
+        {
+            get => (VisualizerMode)GetValue(ModeProperty);
+            set => SetValue(ModeProperty, value);
         }
 
         protected override void OnPointerWheelChanged(PointerWheelEventArgs e)
@@ -87,8 +96,15 @@ namespace UFOPlayer.Views
         {
             InitializeComponent();
 
-            visualizer = new Visualizer();
-            
+            if (Mode == VisualizerMode.Line)
+            {
+                visualizer = new LineGraphVisualizer();
+            }
+            else
+            {
+                visualizer = new DoubleBarGraph();
+            }
+
         }
 
         private void InitializeComponent()
@@ -101,8 +117,20 @@ namespace UFOPlayer.Views
             base.OnPropertyChanged(change);
 
 
-            if (change.Property == ScrubberProperty || change.Property == ActionsProperty || change.Property == DurationProperty)
+            if (change.Property == ScrubberProperty || change.Property == ActionsProperty || 
+                change.Property == DurationProperty || change.Property == ModeProperty)
             {
+                if (change.Property == ModeProperty)
+                {
+                    if (Mode == VisualizerMode.Line)
+                    {
+                        visualizer = new LineGraphVisualizer();
+                    }
+                    else
+                    {
+                        visualizer = new DoubleBarGraph();
+                    }
+                }
                 visualizer.Position = Scrubber;
                 visualizer.EndBound = Duration;
                 visualizer.Actions = Actions;
