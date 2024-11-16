@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using UFOPlayer.ViewModels;
 
-namespace UFOPlayer.MediaSources
+namespace UFOPlayer.MediaSources.HereSphere
 {
     internal class DeoVrSourceFactory : AbstractSourceFactory
     {

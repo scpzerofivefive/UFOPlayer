@@ -14,14 +14,30 @@ namespace UFOPlayer.ViewModels
     {
         public static string VERSION { get; } = "Version: " + Assembly.GetEntryAssembly().GetName().Version.ToString();
 
-        [ObservableProperty]
-        private string _vlcEndpoint = "127.0.0.1:8080";
+        private static readonly string defaultregex = "^(.*ufo.*{0}.*|.*{0}.*ufo.*)$";
+
+        private static readonly string defaultVlcEndpoint = "127.0.0.1:8080";
+
+        private static readonly string defaultVlcPassword = "1234";
+
+        private static readonly string defaultDeoVrEndpoint = "localhost:23554";
+
+
 
         [ObservableProperty]
-        private string _vlcPassword = "1234";
+        private string _regex = defaultregex;
+
 
         [ObservableProperty]
-        private string _deoVrEndpoint = "localhost:23554";
+        private string _vlcEndpoint = defaultVlcEndpoint;
+
+        [ObservableProperty]
+        private string _vlcPassword = defaultVlcPassword;
+
+
+
+        [ObservableProperty]
+        private string _deoVrEndpoint = defaultDeoVrEndpoint;
 
         public SettingsViewModel() {
         

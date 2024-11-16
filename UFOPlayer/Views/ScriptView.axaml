@@ -10,7 +10,10 @@
 			 xmlns:materialIcons="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
 			 x:DataType="vm:ScriptViewModel">
 	<Grid ColumnDefinitions="600" RowDefinitions="Auto, Auto">
-		<views:ScriptVisualizerView Actions="{Binding Actions}" Duration="{Binding Duration}" Scrubber="{Binding Scrubber}"
+
+		<views:ScriptVisualizerView Script="{Binding ScriptHandler.Script}"
+									Duration="{Binding ScriptHandler.MediaDuration}"
+									Scrubber="{Binding ScriptHandler.ElapsedTime}"
 									Mode="{Binding Mode}"
 				Width="600" Height="100" Margin=""
 					Grid.Row="0"
@@ -38,7 +41,7 @@
 
 			</Button>
 			<TextBox x:Name="fileLabel" IsReadOnly="True"
-					 Text="{Binding Filename, Mode=TwoWay}"
+					 Text="{Binding ScriptHandler.Script.Name, Mode=TwoWay}"
 					 BorderThickness="0"
 					 DragDrop.AllowDrop="True"
 					 DockPanel.Dock="Left"
@@ -49,7 +52,7 @@
 					 Grid.Row="0"
 					 Grid.Column="1">
 				<ToolTip.Tip>
-					<TextBlock FontSize="10" Text="{Binding Filename}"></TextBlock>
+					<TextBlock FontSize="10" Text="{Binding ScriptHandler.Script.Name}"></TextBlock>
 				</ToolTip.Tip>
 			</TextBox>
 

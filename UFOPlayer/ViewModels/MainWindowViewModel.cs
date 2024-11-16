@@ -1,7 +1,6 @@
 ﻿using Avalonia.Controls;
 using System.Diagnostics;
 using System.Runtime.Serialization;
-using UFOPlayer.Events;
 using Avalonia.Controls;
 using Avalonia.Media;
 using Avalonia.Styling;
@@ -13,24 +12,32 @@ using System.Reactive;
 using DynamicData;
 using System;
 using Material.Icons;
+using UFOPlayer.Scripts;
 
 namespace UFOPlayer.ViewModels
 {
+
+    public delegate void SettingUpdate(SettingsViewModel settings);
+
     [DataContract]
     public partial class MainWindowViewModel : ObservableObject
     {
-
         [IgnoreDataMember]
-        public ScriptViewModel Script { get; } = new ScriptViewModel();
-
+        public ScriptHandler ScriptHandler {  get; }
         [IgnoreDataMember]
-        public DeviceViewModel Device { get; } = new DeviceViewModel();
-
+        public ScriptViewModel Script { get; }
+        [IgnoreDataMember]
+        public DeviceViewModel Device { get; }
         [IgnoreDataMember]
         public MediaSourceViewModel Media { get; }
 
-        [DataMember]
+
+        public static SettingUpdate onSettingsUpdate { get; set; }
+
         private static SettingsViewModel _settings = new SettingsViewModel();
+
+
+        [DataMember]
         public static SettingsViewModel Settings {
             get
             {
@@ -43,16 +50,21 @@ namespace UFOPlayer.ViewModels
             }
         }
 
-        public static void updateSetttings(SettingsViewModel settings)
+        public void updateSetttings(SettingsViewModel settings)
         {
             Settings = settings;
-            EventBus.Instance.InvokeSetttingsUpdate();
+            Media.settingsUpdatedHandler();
         }
 
 
         public MainWindowViewModel()
         {
-            Media = new MediaSourceViewModel();
+            ScriptHandler = new ScriptHandler();
+            Script = new ScriptViewModel(ScriptHandler);
+            Device = new DeviceViewModel(ScriptHandler);
+            Media = new MediaSourceViewModel(Script);
+            onSettingsUpdate = updateSetttings;
+
             onVisualizerModePressed = ReactiveCommand.Create(cycleVisualizer);
         }
 

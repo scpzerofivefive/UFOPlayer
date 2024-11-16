@@ -17,12 +17,12 @@ namespace UFOPlayer.Views
 {
     public partial class ScriptVisualizerView : UserControl
     {
-        public static readonly StyledProperty<List<ScriptAction>> ActionsProperty =
-            AvaloniaProperty.Register<ScriptVisualizerView, List<ScriptAction>>(nameof(Actions), defaultValue: new List<ScriptAction>());
-        public static readonly StyledProperty<int> DurationProperty =
-            AvaloniaProperty.Register<ScriptVisualizerView, int>(nameof(Duration), defaultValue: 1);
-        public static readonly StyledProperty<int> ScrubberProperty =
-            AvaloniaProperty.Register<ScriptVisualizerView, int>(nameof(Scrubber), defaultValue: 1);
+        public static readonly StyledProperty<UFOScript> ScriptProperty =
+            AvaloniaProperty.Register<ScriptVisualizerView,UFOScript>(nameof(Script), defaultValue: new UFOScript());
+        public static readonly StyledProperty<TimeSpan> DurationProperty =
+            AvaloniaProperty.Register<ScriptVisualizerView, TimeSpan>(nameof(Duration), defaultValue: new TimeSpan(0));
+        public static readonly StyledProperty<TimeSpan> ScrubberProperty =
+            AvaloniaProperty.Register<ScriptVisualizerView, TimeSpan>(nameof(Scrubber), defaultValue: new TimeSpan(0));
 
         public static readonly StyledProperty<VisualizerMode> ModeProperty = 
             AvaloniaProperty.Register<ScriptVisualizerView, VisualizerMode>(nameof(Mode), defaultValue: VisualizerMode.Bar);
@@ -32,20 +32,22 @@ namespace UFOPlayer.Views
             get; set;
         } = 1.0f;
 
-        public int Duration
+        public UFOScript Script
+        {
+            get => GetValue(ScriptProperty);
+            set => SetValue(ScriptProperty, value);
+        }
+
+        public TimeSpan Duration
         {
             get => GetValue(DurationProperty);
             set => SetValue(DurationProperty, value);
         }
-        public List<ScriptAction> Actions
-        {
-            get => GetValue(ActionsProperty);
-            set => SetValue(ActionsProperty, value);
-        }
+        
 
-        public int Scrubber
+        public TimeSpan Scrubber
         {
-            get => GetValue<int>(ScrubberProperty);
+            get => GetValue(ScrubberProperty);
             set => SetValue(ScrubberProperty, value);
         }
 
@@ -59,9 +61,9 @@ namespace UFOPlayer.Views
         {
             base.OnPointerWheelChanged(e);
 
-            float minZoom = (float)((1000/80) /( Duration / Width));
+            float minZoom = (float)((1000/80) /( Duration.TotalMilliseconds / Width));
 
-            if (Actions == null || Actions.Count == 0)
+            if (Script == null || Duration.TotalMilliseconds == 0)
             {
                 return;
             }
@@ -73,17 +75,7 @@ namespace UFOPlayer.Views
             zoom -= zoomIncrement * (float)e.Delta.Y;
             zoom = Math.Clamp(zoom, minZoom, 1f);
 
-            if (zoom < 1.0f)
-            {
-                int scale = (int)Math.Round(zoom * Duration / 2.0f);
-                visualizer.StartBound = Scrubber - scale;
-                visualizer.EndBound = Scrubber + scale;
-            }
-            else
-            {
-                visualizer.StartBound = 0;
-                visualizer.EndBound = Duration;
-            }
+            setScaledBounds();
 
             InvalidateVisual();
         }
@@ -117,7 +109,7 @@ namespace UFOPlayer.Views
             base.OnPropertyChanged(change);
 
 
-            if (change.Property == ScrubberProperty || change.Property == ActionsProperty || 
+            if (change.Property == ScrubberProperty || change.Property == ScriptProperty || 
                 change.Property == DurationProperty || change.Property == ModeProperty)
             {
                 if (change.Property == ModeProperty)
@@ -133,24 +125,28 @@ namespace UFOPlayer.Views
                 }
                 visualizer.Position = Scrubber;
                 visualizer.EndBound = Duration;
-                visualizer.Actions = Actions;
+                visualizer.Actions = Script;
 
-                if (zoom < 1.0f)
-                {
-                    int scale = (int)Math.Round(zoom * Duration / 2.0f);
-                    visualizer.StartBound = Scrubber - scale;
-                    visualizer.EndBound = Scrubber + scale;
-
-                }
-                else
-                {
-                    visualizer.StartBound = 0;
-                    visualizer.EndBound = Duration;
-                }
+                setScaledBounds();
                 InvalidateVisual();  // Triggers OnRender
             }
 
 
+        }
+
+        private void setScaledBounds()
+        {
+            if (zoom < 1.0f)
+            {
+                int scale = (int)Math.Round(zoom * Duration.TotalMilliseconds / 2.0f);
+                visualizer.StartBound = TimeSpan.FromMilliseconds(Scrubber.TotalMilliseconds - scale);
+                visualizer.EndBound = TimeSpan.FromMilliseconds(Scrubber.TotalMilliseconds + scale);
+            }
+            else
+            {
+                visualizer.StartBound = new TimeSpan(0);
+                visualizer.EndBound = Duration;
+            }
         }
 
         

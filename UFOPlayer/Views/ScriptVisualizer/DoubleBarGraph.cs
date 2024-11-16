@@ -5,6 +5,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using UFOPlayer.Scripts;
 
 namespace UFOPlayer.Views.ScriptVisualizer
 {
@@ -28,42 +29,33 @@ namespace UFOPlayer.Views.ScriptVisualizer
 
         public override void DrawActions(SKCanvas canvas)
         {
-            if (Actions == null || Actions.Count == 0)
+            if (Actions == null)
                 return;
 
-            // Paths for the left and right channels
-            using var leftChannelPath = new SKPath();
-            using var rightChannelPath = new SKPath();
+            DrawBars(canvas, Actions.RightActions, (float)Bounds.Height / 2);
+            DrawBars(canvas, Actions.LeftActions, (float)Bounds.Height);
 
+        }
+
+        private void DrawBars(SKCanvas canvas, LinkedList<ScriptAction> actions, float bottom)
+        {
             float prevX = 0;
-            float prevYLeft = 0;
-            float prevYRight = 0;
-
-            foreach (var action in Actions)
+            float prevHeight = 0;
+            foreach (ScriptAction a in actions)
             {
-                int time = action.Timestamp - StartBound;
-                int end = EndBound - StartBound;
-                float x = (float)(time * Bounds.Width / end);
-                float yLeft = (float)((action.Left * (Bounds.Height / 2) / 100));
-                float yRight = (float)((action.Right * (Bounds.Height / 2) / 100));
+                float x = getXCoordAt(a.Timestamp);
+                float height = (float)((a.Intensity * (Bounds.Height / 2) / 100));
 
-                DrawSide(canvas, prevX, x, prevYRight, (float)Bounds.Height / 2);
-                DrawSide(canvas, prevX, x, prevYLeft, (float) Bounds.Height);
-
-
+                DrawSide(canvas, prevX, x, prevHeight, bottom);
 
                 prevX = x;
-                prevYLeft = yLeft;
-                prevYRight = yRight;
+                prevHeight = height;
 
-                if (action.Timestamp > EndBound)
+                if (a.Timestamp > EndBound)
                 {
                     break;
                 }
-
             }
-
-
         }
 
         private void DrawSide(SKCanvas canvas, float prevX, float x, float y, float bottom)

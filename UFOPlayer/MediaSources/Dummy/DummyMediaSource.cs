@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace UFOPlayer.MediaSources.Dummy
 {
-    internal class DummyMediaSource : AbstractMediaSource
+    public class DummyMediaSource : AbstractMediaSource
     {
 
         public override void Dispose()

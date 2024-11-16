@@ -10,7 +10,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 
-namespace UFOPlayer.MediaSources
+namespace UFOPlayer.MediaSources.Whirligig
 {
     public class WhirligigMediaSource : AbstractMediaSource, IDisposable
     {
@@ -88,7 +88,7 @@ namespace UFOPlayer.MediaSources
                 Debug.WriteLine("Whirligig: " + line);
             if (line.StartsWith("S"))
             {
-                OnIsPlayingChanged(false);
+                OnIsPlaying(false);
                 //_timeSource.Pause();
             }
             else if (line.StartsWith("C"))
@@ -104,7 +104,7 @@ namespace UFOPlayer.MediaSources
                 TimeSpan position = TimeSpan.FromSeconds(seconds);
 
                 //_timeSource.Play();
-                OnIsPlayingChanged(true);
+                OnIsPlaying(true);
 
                 if (position == _lastReceivedTimestamp)
                     return;
@@ -118,14 +118,14 @@ namespace UFOPlayer.MediaSources
                 string timeStamp = line.Substring(10).Trim();
                 double seconds = ParseWhirligigTimestap(timeStamp);
                 //_timeSource.SetDuration(TimeSpan.FromSeconds(seconds));
-                OnDurationChanged(TimeSpan.FromSeconds(seconds));   
+                OnDurationChanged(TimeSpan.FromSeconds(seconds));
             }
             else
             {
                 Debug.WriteLine("Unknown Parameter: " + line);
             }
 
-           
+
         }
 
         private static readonly CultureInfo[] Cultures;

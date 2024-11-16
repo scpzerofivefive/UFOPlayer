@@ -1,4 +1,5 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
+using Newtonsoft.Json.Linq;
 using ReactiveUI;
 using System;
 using System.Collections.Generic;
@@ -10,18 +11,20 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Input;
-using UFOPlayer.Events;
 using UFOPlayer.MediaSources;
 using UFOPlayer.MediaSources.Dummy;
 using UFOPlayer.MediaSources.Vlc;
+using UFOPlayer.Scripts;
 
 namespace UFOPlayer.ViewModels
 {
 
-    public delegate AbstractMediaSource MediaSource();
     public partial class MediaSourceViewModel : ObservableObject, IActivatableViewModel
     {
         public ViewModelActivator Activator { get; }
+
+        private readonly ScriptViewModel scriptHandler;
+
 
         public List<AbstractSourceFactory> SourceList { get; }
             = new List<AbstractSourceFactory> { new VLCSourceFactory() };
@@ -30,15 +33,21 @@ namespace UFOPlayer.ViewModels
         private ConnectionStatus _status = ConnectionStatus.Disconnected;
 
 
-        public MediaSourceViewModel() {
-            EventBus.SettingsUpdatedEvent += settingsUpdatedHandler;
+        public MediaSourceViewModel(ScriptViewModel script) {
+
+            scriptHandler = script;
         }
 
         [ObservableProperty]
         private AbstractSourceFactory _selectedSourceFactory = new DummySourceFactory();
-        
 
-        private AbstractMediaSource _source {  get; set; }
+        partial void OnSelectedSourceFactoryChanged(AbstractSourceFactory value)
+        {
+            Source = value.Create();
+        }
+
+
+        private AbstractMediaSource _source { get; set; }
         public AbstractMediaSource Source {
             get
             {
@@ -49,29 +58,33 @@ namespace UFOPlayer.ViewModels
                 if (_source != null) {
                     _source.Dispose();
                     _source.ConnectionChangedEvent -= connectionChangedHandler;
+                    
                 }
                 Status = ConnectionStatus.Connecting;
                 //Clear source
                 _source = value;
-                _source.ConnectionChangedEvent += connectionChangedHandler;
+                if (_source != null)
+                {
+                    _source.ConnectionChangedEvent += connectionChangedHandler;
+
+                    scriptHandler.MediaSource = _source;
+                }
             }
         }
 
-        private void connectionChangedHandler(object sender, ConnectionEventArg e)
+        private void connectionChangedHandler(ConnectionStatus e)
         {
-            Status = e.status;
+            Status = e;
         }
 
-        private void settingsUpdatedHandler(object sender, EventArgs e)
+        public void settingsUpdatedHandler()
         {
             //PlaybackModeChanged(Mode);
-            Debug.WriteLine("Source Settings NOT Updated");
+            Source = SelectedSourceFactory.Create();
+            Debug.WriteLine("Source Settings Updated");
         }
 
-        partial void OnSelectedSourceFactoryChanged(AbstractSourceFactory value)
-        {
-            Source = value.Create();
-        }
+        
 
 
         [ObservableProperty]

@@ -5,12 +5,14 @@ using System.Linq;
 using System.Reactive;
 using System.Text;
 using System.Threading.Tasks;
-using UFOPlayer.Events;
+using UFOPlayer.Scripts;
 
 namespace UFOPlayer.ViewModels
 {
     public class DeviceSettingsViewModel : ViewModelBase
     {
+        public event ScriptCommandEventHandler ActionEvent;
+
         public bool IsFlipped { get; set; }
         public int MinPower { get; set; } = 0;
 
@@ -23,9 +25,11 @@ namespace UFOPlayer.ViewModels
 
         public async void pingDevice()
         {
-            EventBus.Instance.InvokeAction(new Scripts.ScriptAction(0, 0, -10));
+
+            ActionEvent?.Invoke(new ScriptCommand(0, -10));
             await Task.Delay(5000);
-            EventBus.Instance.InvokeAction(new Scripts.ScriptAction(0, 0, 0));
+            ActionEvent?.Invoke(new ScriptCommand(0, 0));
         }
+
     }
 }

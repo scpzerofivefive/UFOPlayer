@@ -11,45 +11,44 @@
 		>
 	<StackPanel>
 		<StackPanel>
-			
-				<Border BorderBrush="Gray" BorderThickness="1" Padding="10" Margin="10" CornerRadius="5">
+			<Border BorderBrush="Gray" BorderThickness="1" Padding="10" Margin="10" CornerRadius="5">
+				<StackPanel>
+					<TextBlock Text="File Matching" FontWeight="Bold" Margin="0,0,0,10"/>
+					<DockPanel Margin="5">
+						<Button DockPanel.Dock="Right" Content="Use Default" Click="BtnVlcDefault_Click" Margin="5" />
+						<TextBlock Text="Regex: " VerticalAlignment="Center" Margin="5" Width="80"/>
+						<TextBox Text="{Binding Regex}" VerticalAlignment="Center" Margin="5" > </TextBox>
+					</DockPanel>
+				</StackPanel>
+
+			</Border>
+
+			<Border BorderBrush="Gray" BorderThickness="1" Padding="10" Margin="10" CornerRadius="5">
+				<StackPanel>
 					<StackPanel>
-						<TextBlock Text="File Matching" FontWeight="Bold" Margin="0,0,0,10"/>
+						<TextBlock Text="Media Source Settings" FontWeight="Bold" Margin="0,0,0,10"/>
+						<TextBlock Text="VLC" FontWeight="Bold"/>
 						<DockPanel Margin="5">
 							<Button DockPanel.Dock="Right" Content="Use Default" Click="BtnVlcDefault_Click" Margin="5" />
-							<TextBlock Text="Regex: " VerticalAlignment="Center" Margin="5" Width="80"/>
+							<TextBlock Text="IP : Port" VerticalAlignment="Center" Margin="5" Width="80"/>
 							<TextBox Text="{Binding VlcEndpoint}" VerticalAlignment="Center" Margin="5"/>
 						</DockPanel>
+						<DockPanel Margin="5">
+							<TextBlock Text="Password" VerticalAlignment="Center" Margin="5" Width="80"/>
+							<TextBox Text="{Binding VlcPassword}" VerticalAlignment="Center" Margin="5"/>
+						</DockPanel>
 					</StackPanel>
-
-				</Border>
-
-				<Border BorderBrush="Gray" BorderThickness="1" Padding="10" Margin="10" CornerRadius="5">
 					<StackPanel>
-						<StackPanel>
-							<TextBlock Text="Media Source Settings" FontWeight="Bold" Margin="0,0,0,10"/>
-							<TextBlock Text="VLC" FontWeight="Bold"/>
-							<DockPanel Margin="5">
-								<Button DockPanel.Dock="Right" Content="Use Default" Click="BtnVlcDefault_Click" Margin="5" />
-								<TextBlock Text="IP : Port" VerticalAlignment="Center" Margin="5" Width="80"/>
-								<TextBox Text="{Binding VlcEndpoint}" VerticalAlignment="Center" Margin="5"/>
-							</DockPanel>
-							<DockPanel Margin="5">
-								<TextBlock Text="Password" VerticalAlignment="Center" Margin="5" Width="80"/>
-								<TextBox Text="{Binding VlcPassword}" VerticalAlignment="Center" Margin="5"/>
-							</DockPanel>
-						</StackPanel>
-						<StackPanel>
-							<TextBlock Text="DeoVR / HereSphereVR" FontWeight="Bold"/>
-							<DockPanel Margin="5">
-								<Button DockPanel.Dock="Right" Content="Use Default" Click="BtnDeoVRDefault_Click" Margin="5" />
-								<TextBlock Text="IP : Port" VerticalAlignment="Center" Margin="5" Width="80"/>
-								<TextBox Text="{Binding DeoVrEndpoint}" VerticalAlignment="Center" Margin="5"/>
-							</DockPanel>
-						</StackPanel>
+						<TextBlock Text="DeoVR / HereSphereVR" FontWeight="Bold"/>
+						<DockPanel Margin="5">
+							<Button DockPanel.Dock="Right" Content="Use Default" Click="BtnDeoVRDefault_Click" Margin="5" />
+							<TextBlock Text="IP : Port" VerticalAlignment="Center" Margin="5" Width="80"/>
+							<TextBox Text="{Binding DeoVrEndpoint}" VerticalAlignment="Center" Margin="5"/>
+						</DockPanel>
 					</StackPanel>
-					
-				</Border>
+				</StackPanel>
+
+			</Border>
 			
 		</StackPanel>
 		<TextBlock Margin="5"  VerticalAlignment="Bottom" Text="{Binding VERSION}"/>

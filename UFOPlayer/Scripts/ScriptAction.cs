@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -9,29 +8,25 @@ namespace UFOPlayer.Scripts
 {
     public class ScriptAction
     {
-        public int Timestamp { get; set; } //in milliseconds
-        public sbyte Left { get; set; }
-        public sbyte Right { get; set; }
+        public sbyte Intensity { get; set; }
 
-        public ScriptAction(int timestamp, sbyte left, sbyte right)
-        {
-            Timestamp = timestamp; Left = left; Right = right;
+        private TimeSpan _timeSpan;
+        public TimeSpan Timestamp { 
+            get
+            {
+                return TimeSpan.FromTicks(_timeSpan.Ticks);
+            }
+            set
+            {
+                _timeSpan = value;
+            }
         }
 
-        public ScriptAction(sbyte left, sbyte right)
-        {
-            Left = left; Right = right;
-        }
 
-        public byte[] getBuffer()
+        public ScriptAction(TimeSpan timestamp, sbyte intensity)
         {
-            byte[] arr = { 0x05, getSignedMagnitude(Left), getSignedMagnitude(Right) };
-            return arr;
-        }
-
-        private byte getSignedMagnitude(sbyte input)
-        {
-            return input < 0 ? (byte)(~input + 129) : (byte)input;
+            Timestamp = TimeSpan.FromTicks(timestamp.Ticks);
+            Intensity = intensity;
         }
     }
 }

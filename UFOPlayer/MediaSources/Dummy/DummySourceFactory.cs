@@ -15,7 +15,7 @@ namespace UFOPlayer.MediaSources.Dummy
 
         public override AbstractMediaSource Create()
         {
-            throw new NotImplementedException();
+            return new DummyMediaSource();
         }
     }
 }

@@ -113,9 +113,9 @@ namespace UFOPlayer.MediaSources.Vlc
                     {
 
                         if (newStatus.PlaybackState == PlaybackState.Playing)
-                            OnIsPlayingChanged(true);
+                            OnIsPlaying(true);
                         else
-                            OnIsPlayingChanged(false);
+                            OnIsPlaying(false);
                     }
 
                     if (!_previousStatus.IsValid || _previousStatus.Duration != newStatus.Duration)

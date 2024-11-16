@@ -12,7 +12,6 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Interop;
 using System.Windows.Media.Media3D;
-using UFOPlayer.Events;
 using UFOPlayer.Scripts;
 
 namespace UFOPlayer.ViewModels
@@ -20,6 +19,10 @@ namespace UFOPlayer.ViewModels
     public partial class DeviceViewModel : ObservableObject
     {
         public DeviceSettingsViewModel DeviceSettings { get; set; } = new DeviceSettingsViewModel();
+
+        private readonly ScriptHandler _handler;
+
+        private ScriptCommand _command;
 
 
         [ObservableProperty]
@@ -55,7 +58,12 @@ namespace UFOPlayer.ViewModels
 
         public ReactiveCommand<Unit,Unit> ConnectCommand { get; }
 
-        public DeviceViewModel() {
+        public DeviceViewModel(ScriptHandler scriptHandler) {
+
+            _handler = scriptHandler;
+            _handler.ScriptCommandRaised += actionEventHandler;
+            DeviceSettings.ActionEvent += actionEventHandler;
+
             ConnectCommand = ReactiveCommand.Create(()=>
             {
                 if (Status == ConnectionStatus.Disconnected)
@@ -71,48 +79,22 @@ namespace UFOPlayer.ViewModels
             }
             
             );
-            EventBus.ActionEvent += actionEventHandler;
+            
         }
 
-        public void actionEventHandler(object sender, ActionEventArgs e)
+        public void actionEventHandler(ScriptCommand cmd)
         {
-            
+            Debug.WriteLine(string.Format("Actions: ({0},{1})", cmd.Right, cmd.Left));
             if (gatt == null)
                 return;
-            ScriptAction action = e.ScriptAction;
             
             if (DeviceSettings.IsFlipped)
             {
-                action = new ScriptAction(action.Right, action.Left);
+                cmd = new ScriptCommand(cmd.Right, cmd.Left);
             }
 
-            if (DeviceSettings.MinPower > 0)
-            {
-                sbyte l = Math.Abs(action.Left);
-                sbyte r = Math.Abs(action.Right);
-
-                if (l > 0)
-                {
-                    l = (sbyte)convertRange(DeviceSettings.MinPower, l);
-                }
-                if (r > 0)
-                {
-                    r = (sbyte)convertRange(DeviceSettings.MinPower, r);
-                }
-                if (action.Left < 0)
-                {
-                    l = (sbyte) (l * -1);
-                }
-                if (action.Right < 0)
-                {
-                    r = (sbyte)(r * -1);
-                }
-                
-                action = new ScriptAction(l, r);
-            }
-
-            Debug.WriteLine(string.Format("Actions: ({0},{1})", action.Right, action.Left));
-            gatt.WriteValueWithoutResponseAsync(action.getBuffer());
+            //Debug.WriteLine(string.Format("Actions: ({0},{1})", cmd.Right, cmd.Left));
+            gatt.WriteValueWithoutResponseAsync(cmd.getBuffer());
         }
 
         public int convertRange(int newMin, int oldVal)

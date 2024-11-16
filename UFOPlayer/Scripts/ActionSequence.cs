@@ -4,12 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace UFOPlayer.MediaSources
+namespace UFOPlayer.Scripts
 {
-    enum PlaybackMode
+    internal class ActionSequence : LinkedList<ScriptAction>
     {
-        None,
-        VLC,
-        DeoVR
+
+        string Name {  get; set; }
     }
 }

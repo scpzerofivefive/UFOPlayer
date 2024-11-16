@@ -40,16 +40,30 @@ namespace UFOPlayer.Views.ScriptVisualizer
 
         public Rect Bounds { get; set; }
 
-        public int Position { get; set; } = 0;
+        public TimeSpan Position { get; set; } = new TimeSpan(0);
 
-        public int StartBound { get; set; } = 0;
+        public TimeSpan StartBound { get; set; } = new TimeSpan(0);
 
-        public int EndBound { get; set; } = 0;
+        public TimeSpan EndBound { get; set; } = new TimeSpan(0);
+
+        public float getXCoordAt(TimeSpan time)
+        {
+            double t = time.TotalMilliseconds - StartBound.TotalMilliseconds;
+            double end = EndBound.TotalMilliseconds - StartBound.TotalMilliseconds;
+            float x = (float)(t * Bounds.Width / end);
+            return x;
+        }
+
+        /* TODO
+        public TimeSpan getTimeAt(float x)
+        {
+
+        }*/
 
 
 
 
-        public List<ScriptAction> Actions { get; set; } = new List<ScriptAction>();
+        public UFOScript Actions { get; set; } = new UFOScript();
 
         public void Dispose() { }
 
@@ -60,7 +74,7 @@ namespace UFOPlayer.Views.ScriptVisualizer
         public virtual void Render(SKCanvas canvas)
         {
             DrawBackground(canvas);
-            if (Position != 0 && EndBound != 0)
+            if (Position.TotalMilliseconds != 0 && EndBound.TotalMilliseconds != 0)
             {
                 DrawScrubber(canvas);
             }
@@ -70,9 +84,7 @@ namespace UFOPlayer.Views.ScriptVisualizer
         }
         private void DrawScrubber(SKCanvas canvas)
         {
-            int pos = Position - StartBound;
-            int end = EndBound - StartBound;
-            float scrubberX = (float)(pos * Bounds.Width / end);
+            float scrubberX = getXCoordAt(Position);
 
             canvas.DrawLine(scrubberX, 0, scrubberX, (float)Bounds.Height, white);
         }
@@ -103,7 +115,7 @@ namespace UFOPlayer.Views.ScriptVisualizer
 
             paint.PathEffect = SKPathEffect.CreateDash(new float[] { 1, 2 }, 0);
 
-            int span = EndBound - StartBound;
+            double span = EndBound.TotalMilliseconds - StartBound.TotalMilliseconds;
             float numDividers = (float)span / 1000f;
 
             float interval = (float)Bounds.Width / numDividers;
@@ -112,7 +124,7 @@ namespace UFOPlayer.Views.ScriptVisualizer
                 return;
             }
 
-            float x = (float)((1000 - (StartBound % 1000)) * Bounds.Width / span);
+            float x = (float)((1000 - (StartBound.TotalMilliseconds % 1000)) * Bounds.Width / span);
             for (int i = 0; i < numDividers; i++)
             {
                 canvas.DrawLine(x, 0, x, (float)Bounds.Height, paint);

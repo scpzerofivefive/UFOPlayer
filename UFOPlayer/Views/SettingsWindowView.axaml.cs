@@ -36,7 +36,7 @@ public partial class SettingsWindowView : Window
 
     private void Btn_Confirm(object sender, RoutedEventArgs e)
     {
-        MainWindowViewModel.updateSetttings((SettingsViewModel)DataContext);
+        MainWindowViewModel.onSettingsUpdate((SettingsViewModel)DataContext);
         Close();
     }
 

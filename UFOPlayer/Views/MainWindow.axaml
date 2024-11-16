@@ -7,6 +7,7 @@
 		xmlns:views="clr-namespace:UFOPlayer.Views"
         x:Class="UFOPlayer.Views.MainWindow"
 		x:DataType="vm:MainWindowViewModel"
+		xmlns:conv ="clr-namespace:UFOPlayer.Converters"
         Icon="/Assets/avalonia-logo.ico"
         Title="UFOPlayer"
 		CanResize="False"
@@ -16,6 +17,9 @@
 	<Design.DataContext>
 		<vm:MainWindowViewModel/>
 	</Design.DataContext>
+	<Window.Resources>
+		<conv:TimeSpanToStringConverter x:Key="TimeSpanToStringConverter"/>
+	</Window.Resources>
 	<Grid>
 		<Grid.ColumnDefinitions>
 			<ColumnDefinition Width="*" />
@@ -30,7 +34,7 @@
 
 		<!-- Left aligned items -->
 		<StackPanel Grid.Column="0" Orientation="Horizontal" HorizontalAlignment="Left" Margin="5,0,0,0">
-			<TextBlock Text="{Binding Script.PlaybackTime}"
+			<TextBlock Text="{Binding ScriptHandler.ElapsedTime, Converter={StaticResource TimeSpanToStringConverter}}"
 				   DockPanel.Dock="Left"
 				   Width="60"
 				   Margin="10"

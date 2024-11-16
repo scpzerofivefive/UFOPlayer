@@ -35,7 +35,7 @@ namespace UFOPlayer.Views.ScriptVisualizer
 
         public override void DrawActions(SKCanvas canvas)
         {
-            if (Actions == null || Actions.Count == 0)
+            if (Actions == null)
                 return;
 
             using var redPaint = new SKPaint
@@ -56,35 +56,33 @@ namespace UFOPlayer.Views.ScriptVisualizer
                 BlendMode = SKBlendMode.Lighten
             };
 
+            drawPath(canvas, redPaint, Actions.RightActions);
+            drawPath(canvas, bluePaint, Actions.LeftActions);
+        }
 
-
+        private void drawPath(SKCanvas canvas, SKPaint paint, LinkedList<ScriptAction> list)
+        {
             // Paths for the left and right channels
-            using var leftChannelPath = new SKPath();
-            using var rightChannelPath = new SKPath();
+            using var channelPath = new SKPath();
 
             float prevX = 0;
             float prevYLeft = (float)(Bounds.Height / 2);
-            float prevYRight = (float)(Bounds.Height / 2);
 
             // Move to starting points in the paths
-            leftChannelPath.MoveTo(0, prevYLeft);
-            rightChannelPath.MoveTo(0, prevYRight);
-            foreach (var action in Actions)
-            {
-                int time = action.Timestamp - StartBound;
-                int end = EndBound - StartBound;
-                float x = (float)(time * Bounds.Width / end);
-                float yLeft = (float)(Bounds.Height - ((action.Left * (Bounds.Height / 2) / 100) + (Bounds.Height / 2)));
-                float yRight = (float)(Bounds.Height - ((action.Right * (Bounds.Height / 2) / 100) + (Bounds.Height / 2)));
-                // Add line segments to the paths
-                leftChannelPath.LineTo(x, prevYLeft);
-                leftChannelPath.LineTo(x, yLeft);
+            channelPath.MoveTo(0, prevYLeft);
 
-                rightChannelPath.LineTo(x, prevYRight);
-                rightChannelPath.LineTo(x, yRight);
+
+            foreach (ScriptAction action in list)
+            {
+                float x = getXCoordAt(action.Timestamp);
+                float y = (float)(Bounds.Height - ((action.Intensity * (Bounds.Height / 2) / 100) + (Bounds.Height / 2)));
+
+                // Add line segments to the paths
+                channelPath.LineTo(x, prevYLeft);
+                channelPath.LineTo(x, y);
+
                 prevX = x;
-                prevYLeft = yLeft;
-                prevYRight = yRight;
+                prevYLeft = y;
 
                 if (action.Timestamp > EndBound)
                 {
@@ -93,13 +91,8 @@ namespace UFOPlayer.Views.ScriptVisualizer
 
             }
 
-            leftChannelPath.LineTo((float)Bounds.Width, (float)(Bounds.Height / 2));
-
-            rightChannelPath.LineTo((float)Bounds.Width, (float)(Bounds.Height / 2));
-
-            // Draw the entire paths as continuous lines
-            canvas.DrawPath(leftChannelPath, redPaint);
-            canvas.DrawPath(rightChannelPath, bluePaint);
+            channelPath.LineTo((float)Bounds.Width, (float)(Bounds.Height / 2));
+            canvas.DrawPath(channelPath, paint);
         }
 
        
