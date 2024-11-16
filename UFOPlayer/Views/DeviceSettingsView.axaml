@@ -12,5 +12,7 @@
 
 		<Label VerticalAlignment="Center" Content= "Flip: " Grid.Row="1" Grid.Column="0"/>
 		<ToggleSwitch IsChecked="{Binding IsFlipped}" Grid.Row="1" Grid.Column="1"></ToggleSwitch>
+		<Label VerticalAlignment="Center" Content= "Min Pow: " Grid.Row="2" Grid.Column="0"/>
+		<NumericUpDown Minimum="0" Maximum="100" Increment="5" Value="{Binding MinPower}" Grid.Row="2" Grid.Column="1"/>
 	</Grid>
 </UserControl>

@@ -58,10 +58,11 @@ namespace UFOPlayer.Views
             IStorageItem file = e.Data.GetFiles().First();
             Debug.WriteLine(file.Name);
             
-            if (file is IStorageFile)
+            if (file is IStorageFile store)
             {
+
                 ScriptViewModel viewModel = (ScriptViewModel)DataContext;
-                viewModel.loadFile((IStorageFile) file);
+                viewModel.loadFile(store);
             }
             
         }

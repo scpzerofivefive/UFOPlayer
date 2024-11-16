@@ -12,14 +12,17 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Interop;
 using System.Windows.Media.Media3D;
-using UFOPlayer.Events;
-using UFOPlayer.Script;
+using UFOPlayer.Scripts;
 
 namespace UFOPlayer.ViewModels
 {
     public partial class DeviceViewModel : ObservableObject
     {
         public DeviceSettingsViewModel DeviceSettings { get; set; } = new DeviceSettingsViewModel();
+
+        private readonly ScriptHandler _handler;
+
+        private ScriptCommand _command;
 
 
         [ObservableProperty]
@@ -55,7 +58,12 @@ namespace UFOPlayer.ViewModels
 
         public ReactiveCommand<Unit,Unit> ConnectCommand { get; }
 
-        public DeviceViewModel() {
+        public DeviceViewModel(ScriptHandler scriptHandler) {
+
+            _handler = scriptHandler;
+            _handler.ScriptCommandRaised += actionEventHandler;
+            DeviceSettings.ActionEvent += actionEventHandler;
+
             ConnectCommand = ReactiveCommand.Create(()=>
             {
                 if (Status == ConnectionStatus.Disconnected)
@@ -71,22 +79,27 @@ namespace UFOPlayer.ViewModels
             }
             
             );
-            EventBus.ActionEvent += actionEventHandler;
+            
         }
 
-        public void actionEventHandler(object sender, ActionEventArgs e)
+        public void actionEventHandler(ScriptCommand cmd)
         {
-            Debug.WriteLine("Invoked");
+            Debug.WriteLine(string.Format("Actions: ({0},{1})", cmd.Right, cmd.Left));
             if (gatt == null)
                 return;
-            ScriptAction action = e.ScriptAction;
             
             if (DeviceSettings.IsFlipped)
             {
-                action = new ScriptAction(action.Right, action.Left);
+                cmd = new ScriptCommand(cmd.Right, cmd.Left);
             }
 
-            gatt.WriteValueWithoutResponseAsync(action.getBuffer());
+            //Debug.WriteLine(string.Format("Actions: ({0},{1})", cmd.Right, cmd.Left));
+            gatt.WriteValueWithoutResponseAsync(cmd.getBuffer());
+        }
+
+        public int convertRange(int newMin, int oldVal)
+        {
+            return newMin + ((oldVal - 1) * (100 - newMin)) / 99;
         }
 
 
@@ -166,6 +179,14 @@ namespace UFOPlayer.ViewModels
         protected virtual void OnPropertyChanged(string propertyName)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+
+        [ObservableProperty]
+        private bool _isConnected = false;
+
+        partial void OnStatusChanged(ConnectionStatus status)
+        {
+            IsConnected = status == ConnectionStatus.Connected;
         }
     }
 

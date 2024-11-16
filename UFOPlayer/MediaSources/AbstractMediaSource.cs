@@ -7,15 +7,29 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using UFOPlayer.Events;
-
 namespace UFOPlayer.MediaSources
 {
 
-    public delegate void ConnectedEventHandler(object sender, ConnectionEventArg e);
+    public delegate void ConnectedEventHandler(ConnectionStatus e);
+    public delegate void IsPlayingEventHandler(bool e);
+    public delegate void TimeSpanEventHandler(TimeSpan e);
+    public delegate void PlaybackRateChangedEventHandler(double rate);
+    public delegate void FileOpenedEventHandler(string filePath);
+
+
     public abstract class AbstractMediaSource : IDisposable
     {
-        public bool _isConnected {  get; set; } 
+
+        public event IsPlayingEventHandler IsPlayingChangedEvent;
+        public event TimeSpanEventHandler ProgressChangedEvent;
+        public event PlaybackRateChangedEventHandler PlaybackRateChangedEvent;
+        public event TimeSpanEventHandler DurationChangedEvent;
+        public event FileOpenedEventHandler FileOpenedEvent;
+        public event ConnectedEventHandler ConnectionChangedEvent;
+
+        public bool _isConnected {  get; set; }
+
+
         public bool IsConnected { 
             get
             {
@@ -26,10 +40,9 @@ namespace UFOPlayer.MediaSources
                 _isConnected = value;
                 if (!_isConnected)
                 {
-                    EventBus.Instance.InvokePlayingChanged(false);
+                    OnIsPlaying(false);
                 }
-                ConnectionChangedEvent?.Invoke(this,
-                    new ConnectionEventArg(value ? ConnectionStatus.Connected : ConnectionStatus.Connecting));
+                ConnectionChangedEvent?.Invoke(value ? ConnectionStatus.Connected : ConnectionStatus.Connecting);
             }
         }
 
@@ -37,31 +50,30 @@ namespace UFOPlayer.MediaSources
 
         protected virtual void OnFileOpened(string e)
         {
-            EventBus.Instance.InvokeFileChanged(e);
+            FileOpenedEvent?.Invoke(e);
         }
 
         protected virtual void OnDurationChanged(TimeSpan e)
         {
-            EventBus.Instance.InvokeDurationChanged(e);
+            DurationChangedEvent?.Invoke(e);
         }
 
-        protected virtual void OnIsPlayingChanged(bool e)
+        protected virtual void OnIsPlaying(bool e)
         {
-            EventBus.Instance.InvokePlayingChanged(e);
+            IsPlayingChangedEvent?.Invoke(e);
         }
 
         protected virtual void OnProgressChanged(TimeSpan progress)
         {
-            EventBus.Instance.InvokeProgressChanged(progress);
+            ProgressChangedEvent?.Invoke(progress);
         }
 
         protected virtual void OnPlaybackRateChanged(double rate)
         {
-            EventBus.Instance.InvokePlaybackRateChanged(rate);
+            PlaybackRateChangedEvent?.Invoke(rate);
         }
 
 
-        public event ConnectedEventHandler ConnectionChangedEvent;
 
 
     }

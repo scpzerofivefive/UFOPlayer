@@ -10,11 +10,12 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 
-namespace UFOPlayer.MediaSources
+namespace UFOPlayer.MediaSources.HereSphere
 {
     public class HereSphereMediaSource : AbstractMediaSource, IDisposable
     {
         public const string DefaultEndpoint = "localhost:23554";
+
 
         private const bool UseLittleEndian = true;
 
@@ -30,8 +31,6 @@ namespace UFOPlayer.MediaSources
         private HereSphereApiData _previousData;
         private SimpleTcpConnectionSettings _connectionSettings;
         private bool _disposed;
-
-
 
         public HereSphereMediaSource(SimpleTcpConnectionSettings connectionSettings)
         {
@@ -219,7 +218,7 @@ namespace UFOPlayer.MediaSources
 
             if (!string.IsNullOrEmpty(data.Path))
             {
-                if (!String.Equals(data.Path, _previousData?.Path, StringComparison.InvariantCultureIgnoreCase))
+                if (!string.Equals(data.Path, _previousData?.Path, StringComparison.InvariantCultureIgnoreCase))
                 {
                     OnFileOpened(data.Path);
                 }
@@ -246,8 +245,8 @@ namespace UFOPlayer.MediaSources
             {
                 Debug.WriteLine("New PlayerState: " + data.PlayerState);
 
-                bool isPlaying = (data.PlayerState == HereSpherePlayerState.Play);
-                OnIsPlayingChanged(isPlaying);
+                bool isPlaying = data.PlayerState == HereSpherePlayerState.Play;
+                OnIsPlaying(isPlaying);
             }
         }
 

@@ -15,7 +15,7 @@ using System.Xml;
 using Windows.Devices.I2c;
 using Windows.Web.Http;
 
-namespace UFOPlayer.MediaSources
+namespace UFOPlayer.MediaSources.Vlc
 {
     public class VLCMediaSource : AbstractMediaSource
     {
@@ -26,6 +26,8 @@ namespace UFOPlayer.MediaSources
         private bool _running = true;
         private VlcStatus _previousStatus;
 
+
+
         public VLCMediaSource(VlcConnectionSettings connectionSettings)
         {
             _connectionSettings = connectionSettings;
@@ -35,7 +37,7 @@ namespace UFOPlayer.MediaSources
             _clientLoop.Start();
 
         }
-        
+
         private async void ClientLoop()
         {
             while (_running)
@@ -47,7 +49,7 @@ namespace UFOPlayer.MediaSources
                         string status = await Request("status.xml");
                         if (string.IsNullOrWhiteSpace(status))
                         {
-                            
+
                             SetConnected(false);
                         }
                         else
@@ -111,9 +113,9 @@ namespace UFOPlayer.MediaSources
                     {
 
                         if (newStatus.PlaybackState == PlaybackState.Playing)
-                            OnIsPlayingChanged(true);
+                            OnIsPlaying(true);
                         else
-                            OnIsPlayingChanged(false);
+                            OnIsPlaying(false);
                     }
 
                     if (!_previousStatus.IsValid || _previousStatus.Duration != newStatus.Duration)
@@ -139,12 +141,12 @@ namespace UFOPlayer.MediaSources
         {
             string playlist = await Request("playlist.xml");
 
-            if (String.IsNullOrWhiteSpace(playlist))
+            if (string.IsNullOrWhiteSpace(playlist))
                 return;
 
             string filename = FindFileByName(playlist, newStatusFilename);
 
-            if (!String.IsNullOrWhiteSpace(filename))
+            if (!string.IsNullOrWhiteSpace(filename))
                 OnFileOpened(filename);
         }
 

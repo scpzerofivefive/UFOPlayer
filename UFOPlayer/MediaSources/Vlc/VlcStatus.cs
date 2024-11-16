@@ -7,7 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml;
 
-namespace UFOPlayer.MediaSources
+namespace UFOPlayer.MediaSources.Vlc
 {
     public class VlcStatus
     {
@@ -54,7 +54,7 @@ namespace UFOPlayer.MediaSources
 
                 string encodedFileName = status.SelectSingleNode("/root/information/category[@name='meta']/info[@name='filename']")?.InnerText;
 
-                if (!String.IsNullOrWhiteSpace(encodedFileName))
+                if (!string.IsNullOrWhiteSpace(encodedFileName))
                     Filename = WebUtility.HtmlDecode(encodedFileName);
                 else
                     Filename = null;

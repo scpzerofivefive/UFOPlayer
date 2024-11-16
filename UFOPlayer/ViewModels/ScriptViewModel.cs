@@ -13,128 +13,66 @@ using Avalonia.Interactivity;
 using Avalonia.Platform.Storage;
 using System.IO;
 using System.Diagnostics;
-using UFOPlayer.Script;
-using UFOPlayer.Events;
 using System.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
-using UFOPlayer.Util;
+using UFOPlayer.Scripts;
+using UFOPlayer.MediaSources;
+using System.Windows;
+using Avalonia.Controls.Shapes;
+using static System.Windows.Forms.Design.AxImporter;
 
 namespace UFOPlayer.ViewModels
 {
     public partial class ScriptViewModel : ObservableObject, INotifyPropertyChanged
     {
 
-        public ScriptViewModel() {
-            EventBus.DurationChangedEvent += HandleDurationChanged;
-            EventBus.ProgressChangedEvent += HandleProgressChanged;
-            EventBus.PlayingChangedEvent += HandlePlayingChanged;
-            EventBus.FileChangedEvent += HandleFileChanged;
-            EventBus.PlaybackRateChangedEvent += HandlePlaybackRateChanged;
-            Task.Run(async () => { scriptLoop(); });
-            Debug.WriteLine("New Thread");
-        }
-
-        public async void scriptLoop()
-        {
-            while (true)
+        private AbstractMediaSource _mediaSource;
+        public AbstractMediaSource MediaSource { 
+            get { return _mediaSource; }
+            set
             {
-                TimeSpan timeSpan = PlaybackClock.getTimeSpan();
-                
-                int time = (int)timeSpan.TotalMilliseconds;
-                Scrubber = time;
-                String newPlaybackTime = $"{(int)timeSpan.TotalHours:D2}:{timeSpan.Minutes:D2}:{timeSpan.Seconds:D2}";
-                if (!newPlaybackTime.Equals(PlaybackTime))
+                if (_mediaSource != null)
                 {
-                    PlaybackTime = newPlaybackTime;
+                    _mediaSource.FileOpenedEvent -= handleFileOpened;
                 }
-                int i = nextActionIndex;
-                while (i < Actions.Count && Actions[i].Timestamp < time)
+                _mediaSource = value;
+                ScriptHandler.MediaSource = value;
+
+                if (_mediaSource != null)
                 {
-                    prevAction = Actions[i];
-                    i++;
+                    _mediaSource.FileOpenedEvent += handleFileOpened;
                 }
-                if (i != nextActionIndex)
-                {
-                    EventBus.Instance.InvokeAction(prevAction);
-                    nextActionIndex = i;
-                }
-                await Task.Delay(1);
+
             }
         }
 
-        private ScriptAction prevAction = new ScriptAction(0, 0, 0);
-        private int nextActionIndex = 0;
+        private CSVFileLoader _csvFileLoader;
 
-        private FileLoader fileLoader = new FileLoader();
+        public ScriptHandler ScriptHandler { get; }
 
-        public PlaybackClock PlaybackClock { get;} = new PlaybackClock();
-
-        [ObservableProperty]
-        private int _scrubber = 1;
-
-        [ObservableProperty]
-        private String _playbackTime = "00:00:00";
-
-        [ObservableProperty]
-        private List<ScriptAction> _actions = new List<ScriptAction>();
-
-        [ObservableProperty]
-        private int _duration;
-
-        [ObservableProperty]
-        private String _filename = "Select or drop a CSV File";
-
-
-
-        // EVENT HANDLERS ==============================================================
-
-        private void HandleDurationChanged(object sender, TimeSpanEventArg arg)
+        public ScriptViewModel(ScriptHandler scriptHandler)
         {
-            Duration = (int) arg.time.TotalMilliseconds;
+            ScriptHandler = scriptHandler;
+
+            _csvFileLoader = new CSVFileLoader();
         }
 
-        private void HandleProgressChanged(object sender, TimeSpanEventArg arg)
-        {
-            PlaybackClock.SetPosition(arg.time);
-            if (arg.time.TotalMilliseconds < prevAction.Timestamp)
-            {
-                nextActionIndex = 0;
-                prevAction = new ScriptAction(0, 0, 0);
-            }
-        }
-
-        public void HandlePlayingChanged(object sender, BooleanEventArg arg)
-        {
-            if (arg.Value)
-            {
-                PlaybackClock.Play();
-            } else
-            {
-                PlaybackClock.Pause();
-            }
-        }
-
-        public void HandlePlaybackRateChanged(object sender, DoubleEventArg arg)
-        {
-            PlaybackClock.setPlaybackRate(arg.Value);
-        }
-
-        public async void HandleFileChanged(object sender, FileEventArg arg)
-        {
-            String[] filepaths = await fileLoader.getCorrespondingScriptPaths(arg.Filepath);
-            if (filepaths.Length == 0)
-            {
-                Actions = new List<ScriptAction>();
-                return;
-            }
-            Filename = filepaths[0];
-            Task.Run(async () => { Actions = await fileLoader.loadFile(filepaths[0]); });
-        }
 
 
         //=================================================================================
 
 
+        public async void handleFileOpened(string file)
+        {
+            Debug.WriteLine("ASd: " + MainWindowViewModel.Settings.Regex);
+            String[] filepaths = await _csvFileLoader.getCorrespondingScriptPaths(file, MainWindowViewModel.Settings.Regex);
+            if (filepaths.Length == 0)
+            {
+                ScriptHandler.Script = new UFOScript();
+                return;
+            }
+            Task.Run(async () => { ScriptHandler.Script = await _csvFileLoader.loadFile(filepaths[0]); });
+        }
 
         public void loadFile(IStorageFile file)
         {
@@ -143,12 +81,16 @@ namespace UFOPlayer.ViewModels
             {
                 return;
             }
-            Filename = file.Name;
-            Task.Run(async () => { 
-            Actions = await fileLoader.loadFile(file);
+            Task.Run(async () =>
+            {
+                ScriptHandler.Script = await _csvFileLoader.loadFile(file.Name, await file.OpenReadAsync());
             });
         }
 
-        
+
+        [ObservableProperty]
+        private VisualizerMode _mode = VisualizerMode.Line;
+
+
     }
 }

@@ -5,16 +5,16 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace UFOPlayer
+namespace UFOPlayer.Scripts
 {
-    public class PlaybackClock
+    public class MediaSyncController
     {
 
         private TimeSpan originTime { get; set; } = new TimeSpan();
         private double playback_rate { get; set; } = 1;
         private Stopwatch _stopwatch = new Stopwatch();
 
-        public PlaybackClock()
+        public MediaSyncController()
         {
 
         }
@@ -29,12 +29,14 @@ namespace UFOPlayer
             return _stopwatch.IsRunning;
         }
 
-        public void Pause() { 
+        public void Pause()
+        {
             _stopwatch.Stop();
             refresh();
         }
 
-        public void SetPosition(TimeSpan position) {
+        public void SetPosition(TimeSpan position)
+        {
             originTime = position;
             if (_stopwatch.IsRunning)
             {
@@ -74,7 +76,7 @@ namespace UFOPlayer
         {
             originTime = new TimeSpan();
             _stopwatch.Reset();
-            playback_rate = 1;
+            playback_rate = 1; //TODO
         }
     }
 }

@@ -6,7 +6,7 @@ using ReactiveUI;
 using System;
 using System.Diagnostics;
 using System.Reactive;
-using UFOPlayer.MediaSources;
+using UFOPlayer.MediaSources.Vlc;
 using UFOPlayer.ViewModels;
 
 namespace UFOPlayer;
@@ -36,7 +36,7 @@ public partial class SettingsWindowView : Window
 
     private void Btn_Confirm(object sender, RoutedEventArgs e)
     {
-        MainWindowViewModel.updateSetttings((SettingsViewModel)DataContext);
+        MainWindowViewModel.onSettingsUpdate((SettingsViewModel)DataContext);
         Close();
     }
 

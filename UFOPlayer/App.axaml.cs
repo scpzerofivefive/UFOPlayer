@@ -30,11 +30,10 @@ namespace UFOPlayer
             
             var suspension = new AutoSuspendHelper(ApplicationLifetime);
             RxApp.SuspensionHost.CreateNewAppState = () => new MainWindowViewModel();
-            RxApp.SuspensionHost.SetupDefaultSuspendResume(new NewtonsoftJsonSuspensionDriver("application_state.json"));
+            RxApp.SuspensionHost.SetupDefaultSuspendResume(new NewtonsoftJsonSuspensionDriver("app_state.json"));
             suspension.OnFrameworkInitializationCompleted();
-
             var state = RxApp.SuspensionHost.GetAppState<MainWindowViewModel>();
-            Debug.WriteLine(state);
+           // Debug.WriteLine(state);
             new MainWindow { DataContext = state }.Show();
             
             base.OnFrameworkInitializationCompleted();

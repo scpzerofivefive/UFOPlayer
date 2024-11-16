@@ -19,7 +19,6 @@ namespace UFOPlayer.Views
         public MediaSourceView()
         {
             InitializeComponent();
-            mediaOptions.SelectionChanged += OnComboBoxSelectionChanged;
             this.DetachedFromLogicalTree += detachedHandler;
         }
 
@@ -32,10 +31,5 @@ namespace UFOPlayer.Views
         }
 
 
-        private void OnComboBoxSelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            MediaSourceViewModel viewModel = (MediaSourceViewModel) DataContext;
-            viewModel.PlaybackModeChanged((PlaybackMode) e.AddedItems[0]);
-        }
     }
 }

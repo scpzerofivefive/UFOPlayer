@@ -6,7 +6,7 @@ using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace UFOPlayer.MediaSources
+namespace UFOPlayer.MediaSources.Whirligig
 {
     public class WhirligigConnectionSettings
     {
