@@ -13,6 +13,7 @@ using System.Threading.Tasks;
 using System.Windows.Input;
 using UFOPlayer.MediaSources;
 using UFOPlayer.MediaSources.Dummy;
+using UFOPlayer.MediaSources.HereSphere;
 using UFOPlayer.MediaSources.Vlc;
 using UFOPlayer.Scripts;
 
@@ -27,7 +28,7 @@ namespace UFOPlayer.ViewModels
 
 
         public List<AbstractSourceFactory> SourceList { get; }
-            = new List<AbstractSourceFactory> { new VLCSourceFactory() };
+            = new List<AbstractSourceFactory> { new VLCSourceFactory(), new DeoVrSourceFactory()};
 
         [ObservableProperty]
         private ConnectionStatus _status = ConnectionStatus.Disconnected;

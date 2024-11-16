@@ -7,11 +7,11 @@ using UFOPlayer.ViewModels;
 
 namespace UFOPlayer.MediaSources.HereSphere
 {
-    internal class DeoVrSourceFactory : AbstractSourceFactory
+    public class DeoVrSourceFactory : AbstractSourceFactory
     {
         public override string Name => "DeoVr";
 
-        public override string IconPath => throw new NotImplementedException();
+        public override string IconPath => "/Assets/deo-icon.svg";
 
         public override AbstractMediaSource Create()
         {
