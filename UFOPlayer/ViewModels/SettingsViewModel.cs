@@ -46,6 +46,7 @@ namespace UFOPlayer.ViewModels
         public SettingsViewModel(SettingsViewModel settings) {
             VlcEndpoint = settings.VlcEndpoint;
             VlcPassword = settings.VlcPassword;
+            Regex = settings.Regex;
         }
 
         public override bool Equals(object obj)
