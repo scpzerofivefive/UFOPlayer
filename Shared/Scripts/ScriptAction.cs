@@ -4,14 +4,15 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace UFOPlayer.Scripts
+namespace Shared.Scripts
 {
     public class ScriptAction
     {
         public sbyte Intensity { get; set; }
 
         private TimeSpan _timeSpan;
-        public TimeSpan Timestamp { 
+        public TimeSpan Timestamp
+        {
             get
             {
                 return TimeSpan.FromTicks(_timeSpan.Ticks);

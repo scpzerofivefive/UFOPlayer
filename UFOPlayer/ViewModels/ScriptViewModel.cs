@@ -1,25 +1,11 @@
-﻿using Avalonia.Controls.ApplicationLifetimes;
-using Avalonia.Controls;
-using Avalonia.Input;
-using System;
-using System.Windows.Input;
-using System.Collections.Generic;
+﻿using System;
 using System.ComponentModel;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using ReactiveUI;
-using Avalonia.Interactivity;
 using Avalonia.Platform.Storage;
-using System.IO;
 using System.Diagnostics;
-using System.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
-using UFOPlayer.Scripts;
-using UFOPlayer.MediaSources;
-using System.Windows;
-using Avalonia.Controls.Shapes;
-using static System.Windows.Forms.Design.AxImporter;
+using Shared.MediaSources;
+using Shared.Scripts;
 
 namespace UFOPlayer.ViewModels
 {

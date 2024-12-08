@@ -8,7 +8,7 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Windows.Storage;
 
-namespace UFOPlayer.Scripts
+namespace Shared.Scripts
 {
     public class CSVFileLoader
     {
@@ -25,15 +25,15 @@ namespace UFOPlayer.Scripts
             string fileType = ".csv";
             string mediaFileName = Path.GetFileNameWithoutExtension(fullPath);
 
-            pattern = String.Format(pattern, Regex.Escape(mediaFileName));
-            
+            pattern = string.Format(pattern, Regex.Escape(mediaFileName));
+
             try
             {
                 // Combine the provided path and filename into a full path
                 Debug.WriteLine("Searching for scripts for " + mediaFileName);
                 Debug.WriteLine("Using pattern: " + pattern);
                 // Get all files in the directory of the combined path with the specified file type
-                string[] allFiles = Directory.GetFiles(Path.GetDirectoryName(fullPath),"*" + fileType);
+                string[] allFiles = Directory.GetFiles(Path.GetDirectoryName(fullPath), "*" + fileType);
 
 
                 // Use LINQ to filter files based on the specified criteria

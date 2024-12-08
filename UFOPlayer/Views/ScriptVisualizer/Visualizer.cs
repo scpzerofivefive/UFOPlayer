@@ -1,16 +1,11 @@
 ﻿using Avalonia;
-using Avalonia.Controls;
-using Avalonia.Markup.Xaml;
 using Avalonia.Media;
 using SkiaSharp;
 using Avalonia.Skia;
 using System;
-using System.Collections.Generic;
 using Avalonia.Platform;
 using Avalonia.Rendering.SceneGraph;
-using System.Diagnostics;
-using Avalonia.Input;
-using UFOPlayer.Scripts;
+using Shared.Scripts;
 
 namespace UFOPlayer.Views.ScriptVisualizer
 {

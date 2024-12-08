@@ -3,8 +3,8 @@ using Avalonia.Controls;
 using Avalonia.Markup.Xaml;
 using Avalonia.Media;
 using AvaloniaProgressRing;
+using Shared;
 using System.Diagnostics;
-using System.Windows;
 
 namespace UFOPlayer.Views
 {

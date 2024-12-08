@@ -4,7 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="UFOPlayer.Views.DeviceView"
-			 xmlns:vm="clr-namespace:UFOPlayer.ViewModels"
+			 xmlns:vm="clr-namespace:Shared.ViewModels;assembly=Shared"
 			 xmlns:views="clr-namespace:UFOPlayer.Views"
 			 x:DataType="vm:DeviceViewModel">
 	<SplitButton Classes="Front" IsEnabled="{Binding Clickable}" Command="{Binding ConnectCommand}"

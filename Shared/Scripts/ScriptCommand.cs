@@ -1,11 +1,6 @@
-﻿using Microsoft.VisualBasic.Logging;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿
 
-namespace UFOPlayer.Scripts
+namespace Shared.Scripts
 {
     public class ScriptCommand
     {
@@ -28,7 +23,7 @@ namespace UFOPlayer.Scripts
             return input < 0 ? (byte)(~input + 129) : (byte)input;
         }
 
-        public override bool Equals(Object obj)
+        public override bool Equals(object obj)
         {
             if (obj is null)
             {
@@ -36,7 +31,7 @@ namespace UFOPlayer.Scripts
             }
             if (obj is ScriptCommand cmd)
             {
-                return this.Left == cmd.Left && this.Right == cmd.Right;
+                return Left == cmd.Left && Right == cmd.Right;
             }
             return false;
         }

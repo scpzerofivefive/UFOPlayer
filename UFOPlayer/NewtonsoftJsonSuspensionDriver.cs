@@ -40,7 +40,7 @@ namespace UFOPlayer
                 lines = File.ReadAllText(_file);
                 state = JsonConvert.DeserializeObject<object>(lines, _settings);
                 return Observable.Return(state);
-            } catch(Exception ex)
+            } catch(Exception)
             {
                 Debug.WriteLine("ERROR: Error while loading settings");
                 return null;

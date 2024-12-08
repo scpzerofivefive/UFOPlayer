@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace UFOPlayer.Scripts
+namespace Shared.Scripts
 {
     public class MediaSyncController
     {

@@ -1,24 +1,25 @@
 ﻿using ReactiveUI;
+using Shared.Scripts;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reactive;
 using System.Text;
 using System.Threading.Tasks;
-using UFOPlayer.Scripts;
 
-namespace UFOPlayer.ViewModels
+namespace Shared.ViewModels
 {
-    public class DeviceSettingsViewModel : ViewModelBase
+    public class DeviceSettingsViewModel : ReactiveObject
     {
         public event ScriptCommandEventHandler ActionEvent;
 
         public bool IsFlipped { get; set; }
         public int MinPower { get; set; } = 0;
 
-        public ReactiveCommand<Unit, Unit> TestCommand { get; } 
+        public ReactiveCommand<Unit, Unit> TestCommand { get; }
 
-        public DeviceSettingsViewModel() {
+        public DeviceSettingsViewModel()
+        {
             TestCommand = ReactiveCommand.Create(() => pingDevice());
         }
 

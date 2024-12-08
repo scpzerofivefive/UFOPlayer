@@ -12,7 +12,8 @@ using System.Reactive;
 using DynamicData;
 using System;
 using Material.Icons;
-using UFOPlayer.Scripts;
+using Shared.Scripts;
+using Shared.ViewModels;
 
 namespace UFOPlayer.ViewModels
 {

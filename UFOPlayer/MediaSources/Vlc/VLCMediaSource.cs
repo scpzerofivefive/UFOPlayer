@@ -1,19 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
+﻿using Shared.MediaSources;
+using System;
 using System.Diagnostics;
-using System.Linq;
-using System.Net;
-using System.Net.Http;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Web;
-using System.Windows;
-using System.Windows.Threading;
 using System.Xml;
-using Windows.Devices.I2c;
-using Windows.Web.Http;
 
 namespace UFOPlayer.MediaSources.Vlc
 {

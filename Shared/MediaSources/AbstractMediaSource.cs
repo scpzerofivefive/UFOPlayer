@@ -7,7 +7,7 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-namespace UFOPlayer.MediaSources
+namespace Shared.MediaSources
 {
 
     public delegate void ConnectedEventHandler(ConnectionStatus e);
@@ -27,14 +27,15 @@ namespace UFOPlayer.MediaSources
         public event FileOpenedEventHandler FileOpenedEvent;
         public event ConnectedEventHandler ConnectionChangedEvent;
 
-        public bool _isConnected {  get; set; }
+        public bool _isConnected { get; set; }
 
 
-        public bool IsConnected { 
+        public bool IsConnected
+        {
             get
             {
                 return _isConnected;
-            } 
+            }
             set
             {
                 _isConnected = value;

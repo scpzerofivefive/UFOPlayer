@@ -1,6 +1,8 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using Newtonsoft.Json.Linq;
 using ReactiveUI;
+using Shared;
+using Shared.MediaSources;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -15,7 +17,6 @@ using UFOPlayer.MediaSources;
 using UFOPlayer.MediaSources.Dummy;
 using UFOPlayer.MediaSources.HereSphere;
 using UFOPlayer.MediaSources.Vlc;
-using UFOPlayer.Scripts;
 
 namespace UFOPlayer.ViewModels
 {

@@ -4,12 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace UFOPlayer
+namespace Shared.Scripts
 {
-    public enum ConnectionStatus
+    internal class ActionSequence : LinkedList<ScriptAction>
     {
-        Connected,
-        Connecting,
-        Disconnected
+
+        string Name { get; set; }
     }
 }

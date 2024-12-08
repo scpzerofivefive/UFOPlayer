@@ -2,19 +2,15 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using InTheHand.Bluetooth;
 using ReactiveUI;
+using Shared.Scripts;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
 using System.Reactive;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Interop;
-using System.Windows.Media.Media3D;
-using UFOPlayer.Scripts;
 
-namespace UFOPlayer.ViewModels
+namespace Shared.ViewModels
 {
     public partial class DeviceViewModel : ObservableObject
     {
@@ -47,7 +43,7 @@ namespace UFOPlayer.ViewModels
         }
 
         [ObservableProperty]
-        private String _buttonTitle = "Connect";
+        private string _buttonTitle = "Connect";
 
         [ObservableProperty]
         private bool _clickable = true;
@@ -56,30 +52,32 @@ namespace UFOPlayer.ViewModels
 
         public GattCharacteristic gatt { get; set; }
 
-        public ReactiveCommand<Unit,Unit> ConnectCommand { get; }
+        public ReactiveCommand<Unit, Unit> ConnectCommand { get; }
 
-        public DeviceViewModel(ScriptHandler scriptHandler) {
+        public DeviceViewModel(ScriptHandler scriptHandler)
+        {
 
             _handler = scriptHandler;
             _handler.ScriptCommandRaised += actionEventHandler;
             DeviceSettings.ActionEvent += actionEventHandler;
 
-            ConnectCommand = ReactiveCommand.Create(()=>
+            ConnectCommand = ReactiveCommand.Create(() =>
             {
                 if (Status == ConnectionStatus.Disconnected)
                 {
                     connect();
-                } else if (Status == ConnectionStatus.Connected)
+                }
+                else if (Status == ConnectionStatus.Connected)
                 {
                     _gattServer.Disconnect();
                     gatt = null;
                     Status = ConnectionStatus.Disconnected;
                 }
-                
+
             }
-            
+
             );
-            
+
         }
 
         public void actionEventHandler(ScriptCommand cmd)
@@ -87,7 +85,7 @@ namespace UFOPlayer.ViewModels
             Debug.WriteLine(string.Format("Actions: ({0},{1})", cmd.Right, cmd.Left));
             if (gatt == null)
                 return;
-            
+
             if (DeviceSettings.IsFlipped)
             {
                 cmd = new ScriptCommand(cmd.Right, cmd.Left);
@@ -99,7 +97,7 @@ namespace UFOPlayer.ViewModels
 
         public int convertRange(int newMin, int oldVal)
         {
-            return newMin + ((oldVal - 1) * (100 - newMin)) / 99;
+            return newMin + (oldVal - 1) * (100 - newMin) / 99;
         }
 
 
@@ -109,7 +107,7 @@ namespace UFOPlayer.ViewModels
             RequestDeviceOptions options = new RequestDeviceOptions
             {
                 Filters = { new BluetoothLEScanFilter { Name = "UFO-TW" } },
-                OptionalServices = { 
+                OptionalServices = {
                     new Guid("40ee0100-63ec-4b7f-8ce7-712efd55b90e"),
                     new Guid("40ee0200-63ec-4b7f-8ce7-712efd55b90e"),
                     new Guid("40ee2222-63ec-4b7f-8ce7-712efd55b90e"),
@@ -123,7 +121,7 @@ namespace UFOPlayer.ViewModels
                 Status = ConnectionStatus.Disconnected;
                 return;
             }
-            
+
             /* TODO ScanForDevices doesn't take in filter properly and takes too long.
             var discoveredDevices = await Bluetooth.ScanForDevicesAsync(
                 options: options);
@@ -163,15 +161,16 @@ namespace UFOPlayer.ViewModels
                 GattCharacteristic gattChar = await services.Last().GetCharacteristicAsync(
                     BluetoothUuid.FromGuid(new Guid("40ee0202-63ec-4b7f-8ce7-712efd55b90e")));
                 Debug.WriteLine(gattChar);
-                this.gatt = gattChar;
+                gatt = gattChar;
                 Status = ConnectionStatus.Connected;
-            } catch (Exception ex)
+            }
+            catch (Exception ex)
             {
                 Status = ConnectionStatus.Disconnected;
             }
-            
+
             //await gattChar.WriteValueWithoutResponseAsync(new ScriptAction(0, 10, 10).getBuffer());
-           
+
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

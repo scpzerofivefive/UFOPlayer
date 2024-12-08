@@ -4,7 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d" d:DesignWidth="200" d:DesignHeight="450"
              x:Class="UFOPlayer.Views.DeviceSettingsView"
-			 xmlns:vm="clr-namespace:UFOPlayer.ViewModels"
+			 xmlns:vm="clr-namespace:Shared.ViewModels;assembly=Shared"
 			 x:DataType="vm:DeviceSettingsViewModel">
 	<Grid ColumnDefinitions="Auto,Auto" RowDefinitions="Auto, Auto, Auto">
 		<Label VerticalAlignment="Center" Content="Right Side: " Grid.Row="0" Grid.Column="0"/>

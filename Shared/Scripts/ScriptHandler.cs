@@ -4,13 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using static System.Windows.Forms.Design.AxImporter;
 using System.Windows;
 using CommunityToolkit.Mvvm.ComponentModel;
-using UFOPlayer.MediaSources;
 using System.Diagnostics;
+using Shared.MediaSources;
 
-namespace UFOPlayer.Scripts
+namespace Shared.Scripts
 {
 
     public delegate void ScriptCommandEventHandler(ScriptCommand cmd);
@@ -23,10 +22,13 @@ namespace UFOPlayer.Scripts
 
         private AbstractMediaSource _mediaSource;
 
-        public AbstractMediaSource MediaSource { 
+        public AbstractMediaSource MediaSource
+        {
             get { return _mediaSource; }
-            set {
-                if (_mediaSource != null) {
+            set
+            {
+                if (_mediaSource != null)
+                {
                     _mediaSource.ProgressChangedEvent -= OnProgressChanged;
                     _mediaSource.DurationChangedEvent -= OnDurationChanged;
                     _mediaSource.IsPlayingChangedEvent -= OnPlayingChanged;

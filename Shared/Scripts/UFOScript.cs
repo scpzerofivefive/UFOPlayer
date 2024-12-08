@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace UFOPlayer.Scripts
+namespace Shared.Scripts
 {
     public class UFOScript
     {
@@ -14,25 +14,28 @@ namespace UFOPlayer.Scripts
         private LinkedList<ScriptAction> _leftActions;
         private LinkedList<ScriptAction> _rightActions;
 
-        public LinkedList<ScriptAction> LeftActions 
+        public LinkedList<ScriptAction> LeftActions
         {
-            get {  return _leftActions; }
-            set { 
+            get { return _leftActions; }
+            set
+            {
                 _leftActions = new LinkedList<ScriptAction>(value.OrderBy(a => a.Timestamp).ToList());
             }
-        
+
         }
 
         public LinkedList<ScriptAction> RightActions
         {
             get { return _rightActions; }
-            set { _rightActions = new LinkedList<ScriptAction>(value.OrderBy(a => a.Timestamp).ToList()); 
+            set
+            {
+                _rightActions = new LinkedList<ScriptAction>(value.OrderBy(a => a.Timestamp).ToList());
             }
         }
 
         public UFOScript(List<ScriptAction> leftActions, List<ScriptAction> rightActions)
         {
-            
+
             LeftActions = new LinkedList<ScriptAction>(leftActions);
             RightActions = new LinkedList<ScriptAction>(rightActions);
 
@@ -50,10 +53,11 @@ namespace UFOPlayer.Scripts
             Name = name;
         }
 
-        public UFOScript() : this(new List<ScriptAction> {}, new List<ScriptAction> {}){
+        public UFOScript() : this(new List<ScriptAction> { }, new List<ScriptAction> { })
+        {
 
         }
-        public UFOScript(string name) : this() 
+        public UFOScript(string name) : this()
         {
             Name = name;
 
@@ -65,9 +69,10 @@ namespace UFOPlayer.Scripts
             if (timestamp < CurrentNodeLeft.Value.Timestamp)
             {
                 CurrentNodeLeft = LeftActions.First;
-            } else
+            }
+            else
             {
-                
+
                 while (CurrentNodeLeft.Next != null &&
                     timestamp.TotalMilliseconds > CurrentNodeLeft.Next.Value.Timestamp.TotalMilliseconds)
                 {
@@ -86,7 +91,7 @@ namespace UFOPlayer.Scripts
                 {
                     CurrentNodeRight = CurrentNodeRight.Next;
                 }
-                
+
             }
 
             return new ScriptCommand(CurrentNodeLeft.Value.Intensity, CurrentNodeRight.Value.Intensity);
